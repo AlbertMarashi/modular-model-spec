@@ -877,8 +877,6 @@ Developers can use models built on the spec to build applications that leverage 
 - human-in-the-loop AI systems and workflows
 - and more - your imagination is the limit!
 
-## Tool use-cases
-
 ### Web browsing assistant with consecutive tool use
 
 Some tasks require using the same tool in multiple consecutive `assistant` messages. When a tool definition allows for only a single call, the model **MUST** respond using using the correct tool calls in consecutive messages in order to fulfil the user’s task.
@@ -1036,146 +1034,6 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
     </Columns>
 </Thread>
 
-> **System Settings**
->
->
-> ```json
-> formats: [
->     "markdown",
->     {
->         name: "browser:json",
->         halt_on_completion: true
->     }
-> }
-> ```
->
-
-> **Developer**
->
->
-> ```markdown
->
-> # Weather tool
-> This tool returns the weather for a location, use the `browser:json` message format.
-> ```typescript
-> type Response = {
->   // city and country to get weather for eg: (Sydney, Australia)
->     location: string
->     // unit of measurement to return
->     unit: "celsius" | "fahrenheit"
-> }[]
-> ```
-> ```
->
-
-> **User**
->
->
-> ```markdown
-> Can you tell me the celsius temperature difference in weather between Sydney and Adelaide?
-> ```
->
-
-> ✅ **Assistant** ->> `browser:json`
->
->
-> ```json
-> {
->     location: "Sydney, Australia"
->     unit: "celsius"
-> }
-> ```
->
-
-> **Tool**
->
->
-> *Developer returns the tool output to the system/llm*
->
-> ```markdown
-> 20°C
-> ```
->
-
-> ✅ **Assistant** ->> `browser:json`
->
->
-> ```json
-> {
->     location: "Adelaide, Australia"
->     unit: "celsius"
-> }
-> ```
->
-
-> **Tool**
->
->
-> *Developer returns the tool output to the system/llm*
->
-> ```markdown
-> 25°C
-> ```
->
-
-> ✅ **Assistant** ->> `markdown`
->
->
-> ```json
-> The weather in Sydney is 20°C and 25°C in Adelaide. Sydney is 5°C colder than Adelaide.
-> ```
->
-> `end_turn`
->
-
-> ✅ **Assistant** ->> `browser:json`
->
->
-> ```json
-> {
->     location: "Sydney, Australia"
->     unit: "celsius"
-> }
-> ```
->
-
-> **Tool**
->
->
-> *Developer returns the tool output to the system/llm*
->
-> ```markdown
-> 20°C
-> ```
->
-
-> ❌ **Assistant** ->> `markdown`
->
->
-> The assistant ended it’s turn and didn’t answer the user’s question which required multiple tool calls
->
-> ```markdown
-> The weather in Sydney is 20°C
-> ```
->
-> `end_turn`
->
-
-> ❌ **Assistant** ->> `tool:get_weather:json`
->
->
-> ```json
-> {
->     location: "Sydney, Australia"
->     unit: "celsius"
-> }
-> {
->     location: "Adelaide, Australia"
->     unit: "celsius"
-> }
-> ```
->
-
 ### Parallel tool use with JSONL
 
 > *Todo*
@@ -1190,65 +1048,48 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
 
 ### Code interpreter
 
-> **System Settings**
->
->
-> ```json
-> formats: [
->     "markdown",
->     {
->         name: "browser:json",
->         halt_on_completion: true
->     }
-> }
-> ```
->
+<Thread>
+    <SystemConfig config={{ "formats": ["markdown", { "name": "interpreter:javascript", "halt_on_completion": true } ] }}/>
+    <Message role="developer">
+        ````markdown
+        You have access to a Javascript interpreter tool which can execute javascript code and return results.
 
-> **Developer**
->
->
-> ```markdown
-> You have access to a Javascript interpreter tool which can execute javascript code and return results. Use the `javascript` message format when you want to execute javascript code.
-> ```
->
-
-> **User**
->
->
-> ```markdown
-> Can you run some code that adds the following two numbers: 10 + 10?
-> ```
->
-
-> ✅ **Assistant** ->> `tool:javascript_interpreter`
->
->
-> *Assistant calls tool with following content, which is passed to the developer by the system, LLM execution is halted until developer or system responds with tool call*
->
-> ```jsx
-> return 10+10
-> ```
->
-
-> **Tool**
->
->
-> *Developer returns the tool output to the system/llm*
->
-> ```markdown
-> 20
-> ```
->
-
-> ✅ **Assistant** ->> `markdown`
->
->
-> ```markdown
-> The result of the calculation was 20
-> ```
->
-> `end_turn`
->
+        Use the `interpreter:javascript` message format when you want to execute javascript code.
+        ````
+    </Message>
+    <Message role="user">
+        ```markdown
+        Can you run some code that adds the following two numbers: 10 + 10?
+        ```
+    </Message>
+    <Columns>
+        <Column>
+            <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
+                ```interpreter:javascript
+                return 10+10
+                ```
+            </Message>
+            <Message role="tool">
+                ```markdown
+                20
+                ```
+            </Message>
+            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={false}>
+                ```markdown
+                The result of the calculation was 20
+                ```
+            </Message>
+        </Column>
+        <Column>
+            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={false}>
+                *Assistant did not specify tool prefix and tool name or correct response format*
+                ```markdown
+                return 10+10
+                ```
+            </Message>
+        </Column>
+    </Columns>
+</Thread>
 
 ## Context Capabilities
 

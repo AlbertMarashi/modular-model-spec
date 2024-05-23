@@ -13,7 +13,7 @@ $: id = plain_text.toLowerCase().replace(/ /g, "-")
 $: active = active_id === id
 
 $: if(browser && active) {
-    toc_heading.scrollIntoView({ behavior: "smooth", block: "nearest"})
+    toc_heading.scrollIntoView({ behavior: "smooth", block: "center"})
 }
 
 </script>
