@@ -26,10 +26,7 @@ function get_message_json(block: MdxJsxFlowElement): Thread {
             // const code = get_first_code_block_value(child)
                 // messages.push(child)
             } else if (child.name === "Message") {
-                const message = get_message_attributes(child)
-                message.content = get_first_code_block_value(child) || ""
-
-                messages.push(message)
+                messages.push( get_message_attributes(child))
             } else if (child.name === "Columns") {
                 messages.push(get_message_json(child))
             } else if (child.name === "Column") {
@@ -42,15 +39,36 @@ function get_message_json(block: MdxJsxFlowElement): Thread {
 }
 
 function get_message_attributes (block: MdxJsxFlowElement): Message {
-    const attributes: Record<string, string> = {}
+    const attributes: Record<string, string> = {
+        role: null,
+        format: null,
+        content: null,
+        end_turn: null,
+    }
+
+    const code = get_first_code_block(block)
+
+    if (code) attributes.content = code.value
+
 
     for (const attr of block.attributes) {
         if (attr.type !== "mdxJsxAttribute") continue
         if (attr.value === null || attr.value === undefined) continue
+        if (attributes[attr.name] !== null) continue
         if (typeof attr.value !== "string") {
             attributes[attr.name] = JSON.parse(attr.value.value)
         } else {
             attributes[attr.name] = attr.value
+        }
+    }
+
+
+    if (code?.lang && attributes.role === "assistant") attributes.format = code.lang
+
+    // remove all null keys
+    for (const key in attributes) {
+        if (attributes[key] === null) {
+            delete attributes[key]
         }
     }
 
