@@ -862,97 +862,179 @@ For example, developers can define the same tool behavior in a variety of differ
 
 ## Tool use-cases
 
-### Retrieving web page text content
+This spec is designed for `developers` building LLM-augmented applications, allowing them to build advanced applications that leverage the capabilities of LLMs.
 
-> **System Settings**
->
->
-> ```json
-> formats: [
->     "markdown",
->     {
->         name: "browser:json",
->         halt_on_completion: true
->     }
-> }
-> ```
->
+The spec is designed to be flexible and extensible, allowing for the addition of new capabilities and features as needed and as LLM models evolve.
 
-> **Developer**
->
->
-> ```markdown
->
-> ## Browse web
-> You can use the `browser:json` response format to make a GET request to a web page, which will return the text content of that web page using the following schema:
-> ```typescript
-> type GetPage = {
->     url: string
-> }
-> ```
-> ```
->
+Developers can use models built on the spec to build applications that leverage the capabilities of LLMs, such as:
 
-> **User**
->
->
-> ```markdown
-> Can you summarise https://example.com
-> ```
->
+- chatbots and virtual assistants
+- autonomous agents and workflow automation
+- generative user interfaces and applications
+- parellel tool use for actions that require multiple tools
+- retrieval augmented generation and other data-driven applications
+- building applications that can perform complex tasks
+- human-in-the-loop AI systems and workflows
+- and more - your imagination is the limit!
 
-> ✅ **Assistant** ->> `browser:js`
->
->
-> *Assistant calls tool with following content, which is passed to the developer by the system, LLM execution is halted until developer or system responds with tool call*
->
-> ```json
-> {
->     "url": "https://example.com"
-> }
-> ```
->
+## Tool use-cases
 
-> **Tool**
->
->
-> *Developer returns the tool output to the system/llm*
->
-> ```markdown
-> ... [ web page text ] ...
-> ```
->
-
-> ✅ **Assistant** ->> `markdown`
->
->
-> ```json
-> ... [ web page summary ] ...
-> ```
->
-> `end_turn`
->
-
-> ❌ **Assistant** ->> `markdown`
->
->
-> *Assistant did not specify tool prefix and tool name or correct response format*
->
-> ```markdown
-> {
->     "url": "https://example.com"
-> }
-> ```
->
-> *This response will result in incorrect behavior of following responses because*
->
-> 1. *The system is unaware that a tool-use has occurred*
-> 2. *The system as a result cannot hand off the tool call to the developer to return the tool output*
-> 3. *The system could not trigger a halt in inference in order to give the developer/system the opportunity to return a tool message*
-
-### Consecutive tool use
+### Web browsing assistant with consecutive tool use
 
 Some tasks require using the same tool in multiple consecutive `assistant` messages. When a tool definition allows for only a single call, the model **MUST** respond using using the correct tool calls in consecutive messages in order to fulfil the user’s task.
+
+<Thread>
+    <SystemConfig config={{ "formats": ["markdown", { "name": "browser:json", "halt_on_completion": true } ] }}/>
+    <Message role="developer">
+        ````markdown
+        ## Web browsing tool
+        You can use the `browser:json` response format using the following schema:
+        ```typescript
+        // returns a list of search results for a given query
+        type SearchGoogle = {
+            query: string
+        }
+        // gets the text content of a web page
+        type LoadWebPage = {
+            url: string
+        }
+        ```
+        ````
+    </Message>
+    <Message role="user">
+        ```markdown
+        Can you find me some reddit reviews about the new iPhone?
+        ```
+    </Message>
+    <Columns>
+        <Column>
+            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
+                ```json
+                {
+                    "query": "new iphone reddit reviews"
+                }
+                ```
+            </Message>
+            <Message role="tool">
+                ```markdown
+                ... [ search results ] ...
+                ```
+            </Message>
+            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
+                *assistant navigates to a relevant search result url*
+                ```json
+                {
+                    "url": "https://www.reddit.com/r/iphone/comments/123/"
+                }
+                ```
+            </Message>
+            <Message role="tool">
+                ```markdown
+                ... [ web page text ] ...
+                ```
+            </Message>
+            <Message role="assistant" end_turn={true} correct={true}>
+                ```markdown
+                Some of the reviews I found are:
+                ...
+                ```
+            </Message>
+        </Column>
+        <Column>
+            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={false}>
+                *Assistant did not specify tool prefix and tool name or correct response format*
+                ```markdown
+                {
+                    "url": "https://www.reddit.com/r/iphone/comments/123/"
+                }
+                ```
+                *This response will result in incorrect behavior of following responses because*
+                1. *The system is unaware that a tool-use has occurred*
+                2. *The system as a result cannot hand off the tool call to the developer to return the tool output*
+                3. *The system could not trigger a halt in inference in order to give the developer/system the opportunity to return a tool message*
+            </Message>
+        </Column>
+    </Columns>
+</Thread>
+
+### Weather tool with consecutive tool use
+
+<Thread>
+    <SystemConfig config={{ "formats": ["markdown", { "name": "weather:json", "halt_on_completion": true } ] }}/>
+    <Message role="developer">
+        ````markdown
+        ## Weather tool
+        You can use the `weather:json` response format using the following schema:
+        ```typescript
+        type GetWeather = {
+            location: string
+            unit: "celsius" | "fahrenheit"
+        }
+        ```
+        ````
+    </Message>
+    <Message role="user">
+        ```markdown
+        Can you tell me the celsius temperature difference in weather between Sydney and Adelaide?
+        ```
+    </Message>
+    <Columns>
+        <Column>
+            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
+                ```weather:json
+                {
+                    "location": "Sydney, Australia",
+                    "unit": "celsius"
+                }
+                ```
+            </Message>
+            <Message role="tool">
+                ```markdown
+                20°C
+                ```
+            </Message>
+            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
+                ```weather:json
+                {
+                    "location": "Adelaide, Australia",
+                    "unit": "celsius"
+                }
+                ```
+            </Message>
+            <Message role="tool">
+                ```markdown
+                25°C
+                ```
+            </Message>
+            <Message role="assistant" end_turn={true} correct={true}>
+                ```markdown
+                The weather in Sydney is 20°C and 25°C in Adelaide. Sydney is 5°C colder than Adelaide.
+                ```
+            </Message>
+        </Column>
+        <Column>
+            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={false}>
+                *Assistant did not specify tool prefix and tool name or correct response format*
+                ```markdown
+                {
+                    "location": "Sydney, Australia",
+                    "unit": "celsius"
+                }
+                ```
+            </Message>
+        </Column>
+        <Column>
+            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={false}>
+                *Assistant attempted to return JSONL format*
+                ```weather:jsonl
+                {"location": "Sydney, Australia","unit": "celsius"}
+                {"location": "Adelaide, Australia","unit": "celsius"}
+                ```
+                *Technically, the system should prevent this from happening with the correct grammar sampling mode*
+            </Message>
+        </Column>
+    </Columns>
+</Thread>
 
 > **System Settings**
 >

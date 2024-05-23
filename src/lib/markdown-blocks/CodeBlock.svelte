@@ -13,8 +13,13 @@ $: language_format = response_format_parts[response_format_parts.length - 1]
 let pre: HTMLPreElement
 let code_el: HTMLElement
 
+const renames: Record<string, string> = {
+    "jsonl": "json",
+    "pseudocode": "plaintext",
+}
+
 $: highlighted_code = hljs.highlight(code, {
-    language: language_format === "pseudocode" || !language_format ? "plaintext" : language_format,
+    language: renames[language_format] || language_format || "plaintext",
 })
 
 $: lines = highlighted_code.value.split("\n")

@@ -29,5 +29,7 @@ column {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    min-width: 350px;
 }
 </style>
