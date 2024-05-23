@@ -909,7 +909,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
     <Columns>
         <Column>
             <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
-                ```json
+                ```browser:json
                 {
                     "query": "new iphone reddit reviews"
                 }
@@ -922,7 +922,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
             </Message>
             <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
                 *assistant navigates to a relevant search result url*
-                ```json
+                ```browser:json
                 {
                     "url": "https://www.reddit.com/r/iphone/comments/123/"
                 }
@@ -945,7 +945,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
                 *Assistant did not specify tool prefix and tool name or correct response format*
                 ```markdown
                 {
-                    "url": "https://www.reddit.com/r/iphone/comments/123/"
+                    "query": "new iphone reddit reviews"
                 }
                 ```
                 *This response will result in incorrect behavior of following responses because*
