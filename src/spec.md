@@ -1265,7 +1265,6 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
     - multi-tool reasoning
     - agentic reasoning
     - generative UI
-    -
 
 ## LLM Trainers
 

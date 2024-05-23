@@ -30,7 +30,7 @@ columns {
     flex-direction: row;
     gap: 16px;
     width: 100%;
-    overflow: auto;
+    overflow-x: auto;
 }
 
 </style>

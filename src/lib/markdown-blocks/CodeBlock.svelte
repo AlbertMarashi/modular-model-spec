@@ -1,7 +1,5 @@
 <script lang="ts">
 import hljs from "highlight.js"
-import ContentCopy from "svelte-material-icons/ContentCopy.svelte"
-import Icon from "$lib/display/Icon.svelte"
 // import Tag from "$lib/display/Tag.svelte"
 import "./code-theme.css"
 

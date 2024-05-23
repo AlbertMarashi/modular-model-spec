@@ -7,6 +7,7 @@ import Check from "svelte-material-icons/Check.svelte"
 import Close from "svelte-material-icons/Close.svelte"
 import ExitToApp from "svelte-material-icons/ExitToApp.svelte"
 import Pause from "svelte-material-icons/Pause.svelte"
+import type { Message } from "$lib/types/messages"
 
 export let block: MdxJsxFlowElement
 
@@ -24,52 +25,6 @@ $: attributes = block.attributes.reduce((acc, attr) => {
 
 $: first_code_block = block.children.find(child => child.type === "code") as Code
 $: lang = first_code_block.lang
-
-type Message =
-    | Assistant
-    | Developer
-    | Platform
-    | User
-    | Tool
-
-/* an LLM generated response */
-type Assistant = {
-    role: "assistant"
-    // the response format or recipient of a tool
-    format: string
-    content: string
-    // whether this assistant ended it's turn
-    end_turn: boolean,
-    correct?: boolean,
-    halted_on_completion?: boolean
-}
-
-/* An LLM developer instruction */
-type Developer = {
-    role: "developer"
-    content: string
-}
-
-/* An instruction provided by the LLM platform or API service */
-type Platform = {
-    role: "platform"
-    content: string
-}
-
-/* A end-user provided instruction */
-type User = {
-    role: "user"
-    content: string
-}
-
-/**
- * Generated response data from the LLM-augmented system (developer or platform)
- */
-type Tool = {
-    role: "tool"
-    // Data returned from a tool
-    content: string
-}
 
 const pretty_types = {
     "assistant": "Assistant",
