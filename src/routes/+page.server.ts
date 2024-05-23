@@ -1,6 +1,5 @@
-import { read } from "$app/server"
+import spec from "../spec.md?raw"
 export async function load() {
-    const spec = await read("../src/spec.md").text()
 
     return {
         spec,
