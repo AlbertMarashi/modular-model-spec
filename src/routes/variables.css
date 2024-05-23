@@ -1,0 +1,48 @@
+
+
+/** ===== GLOBAL CSS VARIABLES ===== */
+:root {
+    --brand-rgb: 40, 150, 150;
+    --brand: rgb(var(--brand-rgb));
+
+    --brand-right-rgb: 255, 69, 69;
+    --brand-right: rgb(var(--brand-right-rgb));
+
+    /** Light Mode Theme */
+    --background-rgb: 255, 255, 255;
+    --background: rgb(var(--background-rgb));
+
+    --foreground-rgb: 17, 16, 15;
+    --foreground: rgb(var(--foreground-rgb));
+
+    /** Dark Mode Theme */
+    /* --background-rgb: 17, 16, 15;
+    --background: rgb(var(--background-rgb));
+
+    --foreground-rgb: 255, 255, 255;
+    --foreground: rgb(var(--foreground-rgb)); */
+
+    --red-rgb: 226, 50, 50;
+    --red: rgb(var(--red-rgb));
+
+    --orange-rgb: 220, 100, 0;
+    --orange: rgb(var(--orange-rgb));
+
+    --yellow-rgb: 242, 201, 76;
+    --yellow: rgb(var(--yellow-rgb));
+
+    --lime-rgb: 179, 209, 70;
+    --lime: rgb(var(--yellow-green-rgb));
+
+    --green-rgb: 0, 180, 80;
+    --green: rgb(var(--green-rgb));
+
+    --blue-rgb: 10, 120, 200;
+    --blue: rgb(var(--blue-rgb));
+
+    --purple-rgb: 116, 70, 246;
+    --purple: rgb(var(--purple-rgb));
+
+    --teal-rgb: 0, 150, 150;
+    --teal: rgb(var(--teal-rgb));
+}
