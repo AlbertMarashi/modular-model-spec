@@ -791,7 +791,7 @@ For example, developers can define the same tool behavior in a variety of differ
     </Message>
     <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
         ```yaml
-        url: string
+        url: "https://example.com"
         ```
     </Message>
     <Message role="tool">

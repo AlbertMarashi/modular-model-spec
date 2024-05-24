@@ -27,11 +27,11 @@ $: first_code_block = block.children.find(child => child.type === "code") as Cod
 $: lang = first_code_block.lang
 
 const pretty_types = {
-    "assistant": "Assistant",
-    "developer": "Developer",
-    "platform": "Platform",
-    "tool": "Tool",
-    "user": "User"
+    "assistant": "Assistant Message",
+    "developer": "Developer Message",
+    "platform": "Platform Message",
+    "tool": "Tool Message",
+    "user": "User Message"
 }
 
 </script>
@@ -126,7 +126,7 @@ message {
         gap: 4px;
         font-weight: bold;
         font-size: 16px;
-        color: color-mix(in srgb, rgba(var(--color-rgb)) 60%, var(--foreground));
+        color: color-mix(in srgb, rgba(var(--color-rgb)) 40%, var(--foreground));
     }
 
     & format {

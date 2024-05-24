@@ -127,7 +127,7 @@ $: numbers = lines.map((_, i) => {
 pre {
     position: relative;
     font-size: 12px;
-    background: rgba(var(--foreground-rgb), 0.0);
+    background: rgba(var(--background-rgb), 0.3);
     border: 1px solid rgba(var(--foreground-rgb), 0.08);
     font-family: "Fira Code", monospace;
     border-radius: 4px;
