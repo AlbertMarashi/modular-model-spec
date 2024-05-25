@@ -5,7 +5,7 @@ export type Message =
     | Developer
     | Platform
     | User
-    | Tool
+    | Context
 
 /* an LLM generated response */
 export type Assistant = {
@@ -37,11 +37,12 @@ export type User = {
     content: string
 }
 
-/**
- * Generated response data from the LLM-augmented system (developer or platform)
- */
-export type Tool = {
-    role: "tool"
+// Contexts are message types that the developer can use to provide contextual information to the model.
+// Context contents are treated as information rather than instructions, except where specified by the developer.
+export type Context = {
+    role: "context"
+    // optional name of the context, so it can be referred to in the developer message
+    name: string | null
     // Data returned from a tool
     content: string
 }

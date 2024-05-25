@@ -6,7 +6,7 @@ import "./code-theme.css"
 export let language: string | null | undefined
 export let code: string
 
-hljs.registerLanguage("tokens", hljs => {
+hljs.registerLanguage("tokens", _ => {
     return {
         contains: [
             {

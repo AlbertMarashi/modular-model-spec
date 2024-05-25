@@ -11,7 +11,13 @@ export let thread: Thread
         <columns>
             {#each message as subthread}
                 <column>
-                    <svelte:self thread={subthread} />
+                    {#if subthread instanceof Array}
+                        <svelte:self thread={subthread} />
+                    {:else}
+                        <CodeBlock
+                            code={JSON.stringify(subthread, null, 4)}
+                            language="json" />
+                    {/if}
                 </column>
             {/each}
         </columns>

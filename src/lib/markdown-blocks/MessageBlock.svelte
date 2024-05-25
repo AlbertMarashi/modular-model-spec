@@ -35,18 +35,18 @@ const icons = {
     "assistant": Robot,
     "developer": CodeBraces,
     "platform": Web,
-    "tool": HammerScrewdriver,
+    "context": HammerScrewdriver,
     "user": AccountCircle
 }
 
 </script>
 <message
     class:assistant={ attributes.role === "assistant" }
+    class:context={ attributes.role === "context" }
     class:correct={ "correct" in attributes && attributes.correct === true }
     class:developer={ attributes.role === "developer" }
     class:incorrect={ "correct" in attributes && attributes.correct === false }
     class:platform={ attributes.role === "platform" }
-    class:tool={ attributes.role === "tool" }
     class:user={ attributes.role === "user" }>
     <name>
         {#if "correct" in attributes}
@@ -132,7 +132,7 @@ message {
     &.platform {
         --color-rgb: var(--purple-rgb);
     }
-    &.tool {
+    &.context {
         --color-rgb: var(--yellow-rgb);
     }
     &.user {

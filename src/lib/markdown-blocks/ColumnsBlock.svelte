@@ -32,7 +32,8 @@ columns-wrapper {
 columns {
     display: flex;
     flex-direction: row;
-    gap: 16px;
+    align-items: start;
+    gap: 24px;
     width: 100%;
 }
 

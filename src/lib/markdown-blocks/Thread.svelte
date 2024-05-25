@@ -78,7 +78,7 @@ function get_message_attributes (block: MdxJsxFlowElement): Message {
 function get_first_code_block(block: BlockContent): Code | null {
     if (!("children" in block)) return null
     for (const child of block.children) {
-        if (child.type === "code") {
+        if (child.type === "code" && block.type === "mdxJsxFlowElement") {
             return child
         } else if ("children" in child) {
             const code = get_first_code_block(child as BlockContent)

@@ -22,6 +22,7 @@ $: if(browser && $page.url.hash === "#" + id) {
 
 function copy_link() {
     navigator.clipboard.writeText(`#${id}`)
+    window.location.hash = "#" + id
     $page.data.alerts.create_alert("success", "Link copied to clipboard")
 }
 </script>
@@ -33,13 +34,13 @@ function copy_link() {
     role="button"
     tabindex="0"
     on:click={ copy_link }>
-    <a href="#{id}">
+    <content>
         <PhrasingContent children={block.children}/>
-    </a>
+    </content>
     <link-selector>
         <Icon
-            icon={Link}
-            size="20px"/>
+            --size="20px"
+            icon={Link}/>
     </link-selector>
 </svelte:element>
 <style>

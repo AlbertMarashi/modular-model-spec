@@ -8,9 +8,7 @@ export let icon: ComponentType
     class="icon"
     on:click
     on:keypress>
-    <svelte:component
-        {...$$props}
-        this={ icon }/>
+    <svelte:component this={ icon }/>
 </div>
 <style>
 
