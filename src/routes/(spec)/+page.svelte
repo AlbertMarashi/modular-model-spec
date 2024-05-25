@@ -9,7 +9,7 @@ export let content: HTMLElement
 
 </script>
 <PageHead
-    description={"A new specification for large language models."}
+    description={"A new specification to make large language models more reliable, powerful and flexible."}
     include_suffix={false}
     title={"Modular Model Spec"}/>
 <page>

@@ -1,6 +1,7 @@
 <script lang="ts">
 import Logo from "$lib/display/Logo.svelte"
-import Creation from "svelte-material-icons/Creation.svelte"
+import Robot from "svelte-material-icons/Robot.svelte"
+import ChevronRight from "svelte-material-icons/ChevronRight.svelte"
 
 export let title: string
 export let description: string | null = null
@@ -20,20 +21,22 @@ export let description: string | null = null
         <span class="description">{ description }</span>
     {/if}
     <div class="fake-button">
-        Read the Spec<div class="icon"><Creation size="1.5em"/></div>
+        <div class="icon"><Robot size="1.5em"/></div>
+        Read the Spec
+        <div class="icon"><ChevronRight size="1.5em"/></div>
     </div>
 </div>
 <style>
     .fake-button {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 16px;
         font-size: 2.5em;
         font-weight: bold;
         padding-top: 0.5em;
         padding-bottom: 0.5em;
         padding-left: 1em;
-        padding-right: 0.5em;
+        padding-right: 1em;
         text-decoration: none;
         border-radius: 100px;
         color: rgba(0,0,0,0.8);
