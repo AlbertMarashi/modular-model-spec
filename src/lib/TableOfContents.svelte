@@ -4,7 +4,8 @@ import { generate_ast } from "$lib/utils/ast"
 import { get_plain_text } from "$lib/utils/plain_text"
 import { onDestroy, onMount, tick } from "svelte"
 import TocSection from "./TocSection.svelte"
-import type { Heading } from "mdast"
+import type { BlockContent, Heading, Root } from "mdast"
+import type PhrasingContent from "./markdown-blocks/PhrasingContent.svelte"
 
 export let markdown: string
 let active_id: null | string = null
@@ -12,7 +13,15 @@ let scrollable_viewport: HTMLElement
 export let content: HTMLElement
 
 $: ast = generate_ast(markdown)
-$: headings = ast.children.filter(block => block.type === "heading") as Heading[]
+$: headings = get_headings(ast)
+
+function get_headings(block: BlockContent | PhrasingContent | Root): Heading[] {
+    if (block.type === "heading") return [block]
+    if ("children" in block) {
+        return block.children.flatMap(get_headings)
+    }
+    return []
+}
 
 
 // We want to observe the scroll position of the page and update the active

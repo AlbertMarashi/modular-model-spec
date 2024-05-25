@@ -60,8 +60,13 @@ const icons = {
             { attributes.role }
         </code>
         {#if attributes.role === "assistant"}
-            <format> -&gt;&gt;</format>
+            <format>-&gt;&gt;</format>
             <code>{ lang || "unspecified" }</code>
+        {/if}
+
+        {#if attributes.role === "context" && attributes.name}
+            <format> -&gt;&gt;</format>
+            <code>{ attributes.name }</code>
         {/if}
     </name>
     <BlocksArray blocks={block.children}/>
@@ -69,8 +74,8 @@ const icons = {
         <format>
             <code>
                 <Icon
-                    icon={ExitToApp}
-                    size="16px"/>
+                    --size="16px"
+                    icon={ExitToApp}/>
                 end_turn
             </code>
         </format>
@@ -79,8 +84,8 @@ const icons = {
         <format class="halted">
             <code>
                 <Icon
-                    icon={Pause}
-                    size="16px"/>
+                    --size="16px"
+                    icon={Pause}/>
                 System Halted Model
             </code>
         </format>

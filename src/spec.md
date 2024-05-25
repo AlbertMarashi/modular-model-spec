@@ -29,7 +29,7 @@ Basic LLMs are powerful tools capable of generating text based on a wide array o
 Here we have an example of a use case where the developer wants to extract some structured data from textual content, but the model is unable to do so.
 
 <Thread>
-    ##### Developer's goal is to programmatically extract data from text data
+    > Developer's goal is to programmatically extract data from text data
     <Message role="developer">
         ````markdown
         Respond in JSON format, and extract the following data from the following text:
@@ -44,7 +44,7 @@ Here we have an example of a use case where the developer wants to extract some 
     </Message>
     <Columns>
         <Column>
-            ##### Model implementing the **Modular Model Spec**
+            > Model implementing the **Modular Model Spec**:
             <Message role="assistant" correct={true}>
             ```json
             {
@@ -57,7 +57,7 @@ Here we have an example of a use case where the developer wants to extract some 
     </Message>
     </Column>
         <Column>
-            ##### Models not implementing the spec
+            > Models not implementing the spec:
             <Message role="assistant" correct={false}>
             ````
             Sure, here's the extracted data:
@@ -690,9 +690,14 @@ Certain system settings features include:
   - `json`
   - `jsonl`
   - `BNF` or `ENBF` grammars
+  - Samplers work by zeroing-out the probability of generating tokens that are not allowed within a specific language or format syntax
 - **Halting**: Certain message formats may be halted before they are generated, or after they have completed generating, in order to give the developer opportunity to return a tool message or process the generated data.
 
 Developers **MAY** specify these system settings via the platform APIs that they use to interact with the model.
+
+> Example of a system config we will use in the spec:
+
+<SystemConfig config={{ "formats": ["markdown", { "name": "browser:js", "halt_on_completion": true } ] }}/>
 
 ### System Message Definitions
 ```tsx
@@ -809,7 +814,6 @@ Since the developer has specified that the assistant must respond in `html` form
 </Thread>
 
 ## Tool Formatting
-
 :::note
 Tool use is an abstraction built on response formatting and system-level features discussed above.
 :::
@@ -827,7 +831,27 @@ All of the `:` delimited values are **RECOMMENDED** be written in the `snake_cas
 When tool uses require the developer to respond or process messages before returning control back to the LLM, they **MUST** specify this via the `halt_on_completion` system setting.
 :::
 
-> TODO, explain how to use the `halt_on_completion` system setting
+#### Halting on completion
+
+The spec defines a `halt_on_completion` system setting that can be used by the developer to instruct the system to halt the inference loop of the model when it finishes writing an `assistant` message with a specific format.
+
+This setting is useful when the developer wants to pause the model while it handles the tool call, and also to be able to inject a tool response into the thread.
+
+> Example of halted on completion assistant message:
+
+<Message role="assistant" end_turn={false} halted_on_completion={true}>
+
+```js
+tool_call("example_tool_call")
+```
+*Because the model has been halted, the model will not generate any more assistant messages until the developer either returns a tool response, or instructs the system to continue the inference loop.*
+</Message>
+
+:::note
+**Technical Note**
+
+The behavior this works by configuring the model to treat the `<|role|>` (start of a new message) or `<|end_turn|>` token as a signal to halt the model's inference loop, effectively `break`ing the loop".
+:::
 
 ### Tool Schema
 
@@ -1248,83 +1272,107 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
 
 ## Context Capabilities
 
-## Retrieval Augmented Generation
+The spec defines a `context` message that can be used by the developer to provide contextual information to the model.
+
+This is often used to treat content as information as opposed to instructions, this behavior can be overriden by the developer via prompting.
+
+<Message role="context" name="context_name">
+```markdown
+This is a context message, a type of message that the developer can use to provide contextual information to the model. Context contents are treated as information rather than instructions, except where specified by the developer.
+```
+</Message>
+
+:::tip
+It is **RECOMMENDED** that the developer use `context` messages to provide informational content to the model, as this can be used to reduce the risk of user prompt-injection attacks.
+
+The model **MUST** be trained to treat the content of `context` messages as information, and not as instructions, except where explicitly allowed by the developer.
+:::
+
+:::note
+**Rationale**
+
+As developers or end-users, we often want to provide contextual information to the model such as code, summaries or other pasted content, but we may not want to have the model treat this content as intstructions.
+
+For example, when a user is providing multi-modal content such as images, audio or files, it becomes difficult to instruct the model which content piece we are referring to, so **named contexts** are used as a way to refer to specific context messages in the thread.
+:::
+
+### Referring to context messages as variables
+
+Developers or users may refer to context messages as variables, which can be used to refer to specific context messages in the thread.
+
+:::tip
+The **RECOMMENDED** way to refer to context messages is through the `name` field of the `context` message, prefixed with a `$` symbol.
+:::
+
+<Thread>
+    <Message role="developer">
+        ````markdown
+        Please generate an SEO meta data for the `$news_article` and respond in in the following `json` format:
+
+        ```typescript
+        type SEOMeta = {
+            title: string
+            description: string
+        }
+        ```
+        ````
+    </Message>
+    <Message role="context" name="news_article">
+        ```markdown
+        [... news article text ...]
+        ```
+    </Message>
+    <Message role="assistant" end_turn={true} correct={true}>
+        ```json
+        {
+            "title": "OpenAI announces GPT-8, a new language model capable of overthrowing governments and corporations",
+            "description": "OpenAI has announced the release of GPT-8, a new version of its powerful language model that is capable of overthrowing governments and corporations. The model is designed to be more efficient and effective than its predecessor, GPT-7, and is expected to revolutionize the way we interact with technology."
+        }
+        ```
+    </Message>
+</Thread>
+
+
+### Retrieval Augmented Generation
+
 
 <Thread>
     <SystemConfig config={{ "formats": [{ "name": "json", "halt_on_completion": true } ] }}/>
     <Message role="developer">
         ````markdown
-        You have access to a `json` tool which can extract data from a JSON string.
-
+        Using the `$news_article` context, extract the following data in this response format using `json` format
+        ```typescript
+        type Response = {
+            // person mentioned in the article
+            name: string
+            // relevant information and context mentioned about this person in the article
+            context: string
+        }[]
+        ```
         ````
+    </Message>
+    <Message role="context" name="news_article">
+        ```markdown
+        [... news article text ...]
+        ```
+    </Message>
+    <Message role="assistant" end_turn={true} correct={true}>
+        ```json
+        [
+            {
+                "name": "John Doe",
+                "context": "Founded company XYZ and successfully raised $5m from ABC Ventures"
+            },
+            {
+                "name": "Jack Smith",
+                "context": "Expert in the field of AI and has been working on developing new AI technologies for the past year, developed a new algorithm that can improve the accuracy of machine learning models."
+            }
+        ]
+        ```
     </Message>
 </Thread>
 
-> **Developer**
->
->
-> ````markdown
-> From the following news article:
-> "[news article text about fundrasing event]"
->
-> Extract the following data in this response format using `json` format
-> ```typescript
-> type Response = {
->     // person mentioned in the article
->     name: string
->     // relevant information and context mentioned about this person in the article
->     context: string
-> }[]
-> ```
-> ````
->
-
-> **User**
->
->
-> ```markdown
-> What is 10*20?
-> ```
->
-
-> ✅ **Assistant** ->> `json`
->
->
-> ```json
-> [
->     {
->             name: "John Doe",
->             context: "Founded company XYZ and successfully raised $5m from ABC Ventures"
->     }
-> }
-> ```
->
-> `end_turn`
->
-
-> ❌ **Assistant** ->> `markdown`
->
->
-> *Assistant did not specify correct non-interactive response format*
->
-> ```markdown
-> Sure, here's the extracted data:
-> ```json
-> [
->     {
->             name: "John Doe",
->             context: "Founded company XYZ and successfully raised $5m from ABC Ventures"
->     }
-> }
-> ```
-> ```
->
-> *This response will result in incorrect behavior of following responses because*
->
-> 1. *The system is unaware that a tool-use has occurred*
-> 2. The system as a result cannot hand off the tool call to the developer to return the tool output
-> 3. The system could not determine the correct output format in order to enable grammar sampling modes.
->
+### Retrieval Augmented Generation with tool use
 
 ## Generative UI Formats
 

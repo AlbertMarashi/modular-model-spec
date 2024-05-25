@@ -35,6 +35,7 @@ columns {
     align-items: start;
     gap: 24px;
     width: 100%;
+    overflow-y: visible;
 }
 
 </style>
