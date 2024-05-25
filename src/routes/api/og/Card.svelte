@@ -21,7 +21,6 @@ export let description: string | null = null
         <span class="description">{ description }</span>
     {/if}
     <div class="fake-button">
-        <div class="icon"><Robot size="1.5em"/></div>
         Read the Spec
         <div class="icon"><ChevronDoubleRight size="1.5em"/></div>
     </div>
