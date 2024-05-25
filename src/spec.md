@@ -1,14 +1,9 @@
 
-<Columns wide={true}>
-</Columns>
-
-<Columns wide={true}>
-<Column>
 # Modular Model Spec
 > *Version 0.0.0*
 
 :::note
-Welcome to the **Modular Model Spec**, a comprehensive guide designed to make Large Language Models (LLMs) more:
+Welcome to the **Modular Model Spec**, a comprehensive guide designed to make Large Language Models (LLMs) more flexible, reliable and convenient for developers building LLM-augmented applications powered by AI.
 
 **Why This Spec Matters**
 
@@ -18,17 +13,23 @@ Welcome to the **Modular Model Spec**, a comprehensive guide designed to make La
 
 This spec outlines how to create and utilize a **unified dataset format** that is both modular and extensible, enabling the development of advanced LLM-augmented applications.
 :::
-</Column>
-</Columns>
+
 ## Who is this for?
 
-> *Todo*
+- **Developers**: To provide developers with the tools and guidelines necessary to build robust, flexible, and reliable LLM augmented applications using LLMs.
+- **Dataset Curators**: To guide dataset curators in creating high-quality, modular datasets that enhance the capabilities of LLMs.
+- **LLM Trainers**: To provide LLM trainers with clear guidelines and standards for training models that adhere to this spec.
+- **API Platforms**: To assist API platforms in implementing the system-level features required by the spec, ensuring seamless integration and utilization of LLMs.
 
 ## What's wrong with current models?
 Basic LLMs are powerful tools capable of generating text based on a wide array of inputs. However, without a structured approach, they can exhibit several limitations:
 
+### Ambiguity in response formats
+
+Here we have an example of a use case where the developer wants to extract some structured data from textual content, but the model is unable to do so.
+
 <Thread>
-    ##### Developer's goal is to programmatically extract data from a text response
+    ##### Developer's goal is to programmatically extract data from text data
     <Message role="developer">
         ````markdown
         Respond in JSON format, and extract the following data from the following text:
@@ -73,27 +74,72 @@ Basic LLMs are powerful tools capable of generating text based on a wide array o
         </Column>
     </Columns>
 </Thread>
-:::error
-**Limited Control**: Developers have minimal control over the LLM’s behavior and output, making it challenging to ensure the LLM follows specific instructions or meets certain standards.
-:::
-:::error
-**Risk of Unsafe Outputs**: Without defined rules and hierarchy, there’s a higher risk of generating unsafe or inappropriate content.
-:::
-:::error
-**Lack of Extensibility**: Basic LLMs are less adaptable to new tools, response formats, and specific use cases, limiting their flexibility.
-:::
 
-This is a document that specifies the desired behaviour of models following this spec. It includes a set of core objectives, as well as guidance on how to deal with conflicting objectives or instructions.
+### Lack of control over LLM behavior
 
-The intention of this spec is for researchers, data labelers to create data as part of training techniques for training Large Language Models (LLMs) to use a unified dataset format that is modular, extensible and powerful. This spec includes documentation for AI platforms and APIs that enable programmable settings for developers.
+Here we have an example of a use case where the developer wants to use a tool to perform a specific task, but the model is unable to do so, and ends up hallcuinating a response.
 
-## Why
+<Thread>
+    ##### Developer wants their assistant to use tools
+    <Message role="developer">
+        ````markdown
+        You can use the `browser:javascript` tool to load the text of a web page
+        ```typescript
+        function open_url(url: string): string;
+        ```
+        ````
+    </Message>
+    <Message role="user">
+        ```markdown
+        Can you summarise https://example.com
+        ```
+    </Message>
+    <Columns>
+        <Column>
+            ##### Model implementing the **Modular Model Spec**
+            <Message role="assistant" correct={true} halted_on_completion={true}>
+            ```browser:javascript
+            open_url("https://example.com")
+            ```
+            - Model specified the correct tool format
+            - The **system** was able to stop the model from generating further responses until the developer returned a tool message
+            </Message>
+            <Message role="tool">
+                *The system notifies the developer of a tool call, and the developer is able to respond with a tool response*
+                ```markdown
+                [... web page text ...]
+                ```
+            </Message>
+            <Message role="assistant" correct={true} end_turn={true}>
+                *Developer returns control back to the LLM*
+                ```markdown
+                [... web page summary ...]
+                ```
+            </Message>
+        </Column>
+        <Column>
+            ##### Models not implementing the spec
+            <Message role="assistant" correct={false} end_turn={true}>
+            ````
+            Sure, I can summarise the web page for you.
 
-This spec is designed to make large language model assistants that are general and assist developers in building LLM-augmented applications powered by AI.
+            get_page("https://example.com")
 
-- Making LLMs more reliable
-- Developer convenience
-- Flexibility and customisation
+            [ ... hallucinates a web page summary, didn't actually call the tool ... ]
+            ````
+            - Developers have minimal control over the LLM’s behavior and output, making it challenging to ensure the LLM follows specific instructions or meets certain standards.
+            </Message>
+        </Column>
+    </Columns>
+</Thread>
+
+### Other issues
+
+Large Language Models (LLMs) have shown incredible potential, but they come with several challenges that make them difficult for developers to use effectively:
+
+- **Lack of flexibility**: LLMs are designed to perform specific tasks, and their behavior can be difficult to customize or modify.
+- **Jailbreaking**: Users may attempt to bypass or circumvent rules or restrictions set by the developer.
+- **Reliability**: LLMs can be unpredictable, and their responses can often generate incorrect formats which are difficult to parse or understand.
 
 ## Objectives, Rules and Capabilities
 
