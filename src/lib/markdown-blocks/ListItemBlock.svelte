@@ -19,6 +19,7 @@ export let block: ListItem
 li {
     margin: 0;
     list-style: initial;
-    padding-left: 0.8em;
+    padding-left: 0.3em;
+    margin-left: 1.2em;
 }
 </style>

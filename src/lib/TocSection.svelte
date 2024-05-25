@@ -33,14 +33,19 @@ $: if(browser && active) {
     padding: 6px 10px;
     font-size: 14px;
     line-height: 1.8em;
-    font-weight: 700;
+    font-weight: 600;
+    opacity: 0.8;
     display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
     &:hover {
+        opacity: 1;
         background-color: rgba(var(--foreground-rgb), 0.1);
         color: var(--foreground);
     }
     &.active {
+        opacity: 1;
         background-color: rgba(var(--brand-rgb), 0.1);
         color: var(--brand);
     }

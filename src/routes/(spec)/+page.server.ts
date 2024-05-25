@@ -1,4 +1,4 @@
-import spec from "../spec.md?raw"
+import spec from "../../spec.md?raw"
 export async function load() {
 
     return {

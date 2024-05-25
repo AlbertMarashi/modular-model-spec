@@ -103,30 +103,31 @@ async function setBottomHeights () {
 
     & .action-bar {
         cursor: pointer;
-        background: var(--brand);
+        background: color-mix(in srgb, rgba(var(--color-rgb)) 20%, var(--background));
+        color: color-mix(in srgb, rgba(var(--color-rgb)) 80%, var(--foreground));
         position: fixed;
         width: 100%;
         max-width: 500px;
-        padding: 8px;
+        padding: 12px;
         font-weight: 500;
-        box-shadow: 0 0 5px color-mix(in srgb, black, 10%);
+        /* box-shadow: 0 0 5px color-mix(in srgb, black, 10%); */
+        border: 1px solid rgba(var(--color-rgb), 0.1);
         border-radius: 5px;
         z-index: 251;
-        color: white;
         transition: 0.2s ease-in-out;
         display: grid;
         grid-template-columns: min-content 1fr min-content;
         align-items: center;
         &.warning {
-            background: var(--orange)
+            --color-rgb: var(--orange-rgb);
         }
 
         &.error {
-            background: var(--red);
+            --color-rgb: var(--red-rgb);
         }
 
         &.success {
-            background: var(--green);
+            --color-rgb: var(--brand-rgb);
         }
 
         & .icon {

@@ -23,7 +23,4 @@ export let block: MdxJsxFlowElement
     <ColumnBlock {block}/>
 {:else}
     <Unsupported/>
-    <pre>
-        { JSON.stringify(block, null, 2) }
-    </pre>
 {/if}

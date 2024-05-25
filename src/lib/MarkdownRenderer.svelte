@@ -7,4 +7,6 @@ export let markdown: string = ""
 $: ast = generate_ast(markdown)
 </script>
 
-<BlocksArray blocks={ast.children}/>
+<BlocksArray
+    blocks={ast.children}
+    give_max_width={true} />

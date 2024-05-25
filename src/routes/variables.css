@@ -15,8 +15,8 @@
     --foreground-rgb: 17, 16, 15;
     --foreground: rgb(var(--foreground-rgb));
 
-    /** Dark Mode Theme */
-    /* --background-rgb: 17, 16, 15;
+    /* * Dark Mode Theme */
+    /* --background-rgb: 17, 20, 25;
     --background: rgb(var(--background-rgb));
 
     --foreground-rgb: 255, 255, 255;
@@ -25,14 +25,14 @@
     --red-rgb: 226, 50, 50;
     --red: rgb(var(--red-rgb));
 
-    --orange-rgb: 220, 100, 0;
+    --orange-rgb: 220, 150, 0;
     --orange: rgb(var(--orange-rgb));
 
     --yellow-rgb: 242, 201, 76;
     --yellow: rgb(var(--yellow-rgb));
 
     --lime-rgb: 179, 209, 70;
-    --lime: rgb(var(--yellow-green-rgb));
+    --lime: rgb(var(--lime-rgb));
 
     --green-rgb: 0, 180, 80;
     --green: rgb(var(--green-rgb));

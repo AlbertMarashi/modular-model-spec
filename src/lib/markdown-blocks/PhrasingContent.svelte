@@ -54,7 +54,8 @@ strong {
     background: rgba(var(--foreground-rgb), 0.1);
     border-radius: 4px;
     padding: 1px 4px;
-    color: var(--foreground);
+    color: rgba(var(--foreground-rgb), 0.9);
+    color: color-mix(in srgb, rgba(var(--color-rgb), 1) 20%, var(--foreground));
 }
 
 img {

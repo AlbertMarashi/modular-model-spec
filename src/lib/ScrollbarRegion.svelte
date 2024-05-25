@@ -38,8 +38,8 @@ export let content_height: string | undefined = undefined
     height: 100%;
     width: 100%;
     min-height: 0;
-    --svrollbar-track-background: rgba(255, 255, 255, 0.04);
-    --svrollbar-thumb-background: var(--brand);
+    --svrollbar-track-background: var(--scrollbar-background, var(--background));
+    --svrollbar-thumb-background: var(--scrollbar-thumb, rgba(var(--foreground-rgb), 0.15));
 
     & .contents {
         min-width: 100%;

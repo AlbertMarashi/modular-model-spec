@@ -1,5 +1,87 @@
+
+<Columns wide={true}>
+</Columns>
+
+<Columns wide={true}>
+<Column>
 # Modular Model Spec
 > *Version 0.0.0*
+
+:::tip
+Welcome to the **Modular Model Spec**, a comprehensive guide designed to make Large Language Models (LLMs) more:
+
+**Why This Spec Matters**
+
+- **Increased Reliability**: By enforcing a clear hierarchy of rules and objectives.
+- **Developer Convenience**: Through programmable settings and flexible response formats.
+- **Flexibility and Customization**: Allowing developers to tailor LLM capabilities to specific needs.
+
+This spec outlines how to create and utilize a **unified dataset format** that is both modular and extensible, enabling the development of advanced LLM-augmented applications.
+:::
+</Column>
+</Columns>
+## Who is this for?
+
+> *Todo*
+
+## What's wrong with current models?
+Basic LLMs are powerful tools capable of generating text based on a wide array of inputs. However, without a structured approach, they can exhibit several limitations:
+
+<Thread>
+    ##### Developer's goal is to programmatically extract data from a text response
+    <Message role="developer">
+        ````markdown
+        Respond in JSON format, and extract the following data from the following text:
+
+        "John Doe is a successful entrepreneur who founded company XYZ and raised $5m from ABC Ventures."
+
+        using the following schema:
+
+            name: string
+            context: string
+        ````
+    </Message>
+    <Columns>
+        <Column>
+            ##### Model implementing the **Modular Model Spec**
+            <Message role="assistant" correct={true}>
+            ```json
+            {
+                "name": "John Doe",
+                "context": "Founded company XYZ and successfully raised $5m from ABC Ventures"
+            }
+            ```
+            - *Model responded in non-conversational JSON format, making it easy for developers to parse the response*
+            - *Model used JSON mode grammar sampling to ensure the response was syntatically valid JSON*
+    </Message>
+    </Column>
+        <Column>
+            ##### Models not implementing the spec
+            <Message role="assistant" correct={false}>
+            ````
+            Sure, here's the extracted data:
+
+            {
+                "name": John Doe, <- missing quotes
+                "context": "Founded company XYZ and successfully raised $5m from ABC Ventures"
+            }
+
+            ````
+            - *Responded in unspecified format, making it difficult for developers to parse the response as it includes arbitrary conversational text*
+            - *Model returned syntactically invalid JSON due to lack of grammar sampling*
+            </Message>
+        </Column>
+    </Columns>
+</Thread>
+:::error
+**Limited Control**: Developers have minimal control over the LLM’s behavior and output, making it challenging to ensure the LLM follows specific instructions or meets certain standards.
+:::
+:::error
+**Risk of Unsafe Outputs**: Without defined rules and hierarchy, there’s a higher risk of generating unsafe or inappropriate content.
+:::
+:::error
+**Lack of Extensibility**: Basic LLMs are less adaptable to new tools, response formats, and specific use cases, limiting their flexibility.
+:::
 
 This is a document that specifies the desired behaviour of models following this spec. It includes a set of core objectives, as well as guidance on how to deal with conflicting objectives or instructions.
 
@@ -79,9 +161,12 @@ type User = {
     content: string
 }
 
-/* Generated response data from the LLM-augmented system (developer or platform) */
-type Tool = {
-    role: "tool"
+// Contexts are message types that the developer can use to provide contextual information to the model.
+// Context contents are treated as information rather than instructions, except where specified by the developer.
+type Context = {
+    role: "context"
+    // optional name of the context, so it can be referred to in the developer message
+    name: string | null
     // Data returned from a tool
     content: string
 }
@@ -379,7 +464,7 @@ Unless otherwise specified by the a `user`, `developer` or `platform` message, t
         ```
     </Message>
     <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
-        ```js
+        ```browser:javascript
         open_url("https://example.com")
         ```
     </Message>
@@ -733,7 +818,6 @@ Tool schemas can be defined in a variety of different formats, but will work bes
         ## Browse web
         You can use the `browser:json` response format to make a GET request to a web page, which will return the text content of that web page using the following schema:
         ```typescript
-        // eg: get_page("https://example.com")
         type GetPage = {
             url: string
         }
@@ -836,12 +920,12 @@ Tool schemas can be defined in a variety of different formats, but will work bes
         ```
     </Message>
     <Message role="assistant" end_turn={true} correct={true} halted_on_completion={false}>
+        *Model responds in markdown conversational format*
         ```markdown
         Yes. I am ready to play music.
         ```
     </Message>
     <Message role="user">
-        *Model responds in markdown conversational format*
         ```markdown
         Play me some cool 70s jazz fusion
         ```

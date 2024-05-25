@@ -39,7 +39,7 @@ function get_message_json(block: MdxJsxFlowElement): Thread {
 }
 
 function get_message_attributes (block: MdxJsxFlowElement): Message {
-    const attributes: Record<string, string> = {
+    const attributes: Record<string, string | null> = {
         role: null,
         format: null,
         content: null,
@@ -75,12 +75,6 @@ function get_message_attributes (block: MdxJsxFlowElement): Message {
     return attributes as Message
 }
 
-function get_first_code_block_value(block: BlockContent): string | null {
-    const code = get_first_code_block(block)
-    if (code) return code.value
-    return null
-}
-
 function get_first_code_block(block: BlockContent): Code | null {
     if (!("children" in block)) return null
     for (const child of block.children) {
@@ -97,35 +91,37 @@ function get_first_code_block(block: BlockContent): Code | null {
 }
 </script>
 <div class="thread">
-    <section-heading>
-        <Icon icon={Forum}/>
-        Thread
-        <div class="toggler">
-            JSON
-            <Toggle bind:value={ json_mode }/>
-        </div>
-    </section-heading>
-    <messages>
-        {#if json_mode}
-            <JsonMessageRenderer thread={thread}/>
-        {:else}
-            {#each block.children as child}
-                {#if child.type === "mdxJsxFlowElement"}
-                    {#if child.name === "SystemConfig"}
-                        <SystemBlock block={child}/>
-                    {:else if child.name === "Message"}
-                        <MessageBlock block={child}/>
-                    {:else if child.name === "Columns"}
-                        <ColumnsBlock block={child}/>
+    <inner>
+        <section-heading>
+            <Icon icon={Forum}/>
+            Thread
+            <div class="toggler">
+                JSON
+                <Toggle bind:value={ json_mode }/>
+            </div>
+        </section-heading>
+        <messages>
+            {#if json_mode}
+                <JsonMessageRenderer thread={thread}/>
+            {:else}
+                {#each block.children as child}
+                    {#if child.type === "mdxJsxFlowElement"}
+                        {#if child.name === "SystemConfig"}
+                            <SystemBlock block={child}/>
+                        {:else if child.name === "Message"}
+                            <MessageBlock block={child}/>
+                        {:else if child.name === "Columns"}
+                            <ColumnsBlock block={child}/>
+                        {:else}
+                            <Unsupported/>
+                        {/if}
                     {:else}
-                        <Unsupported/>
+                        <GenericBlock block={child}/>
                     {/if}
-                {:else}
-                    <GenericBlock block={child}/>
-                {/if}
-            {/each}
-        {/if}
-    </messages>
+                {/each}
+            {/if}
+        </messages>
+    </inner>
 </div>
 <style>
 
@@ -137,15 +133,33 @@ function get_first_code_block(block: BlockContent): Code | null {
     gap: 8px;
 }
 
-.thread {
+inner {
     display: flex;
     flex-direction: column;
+    max-width: 1000px;
+    margin: 0 auto;
     width: 100%;
+    background: rgba(var(--foreground-rgb), 0.02);
+    border: 1px solid rgba(var(--foreground-rgb), 0.1);
+    border-radius: 8px;
+}
+
+
+.thread.thread {
+    max-width: 100%;
+    /* margin-top: 16px; */
+    margin-bottom: 16px;
+    display: flex;
+    /* background: rgba(var(--foreground-rgb), 0.02); */
+    flex-direction: column;
+    width: 100%;
+    /* border-top: 1px solid rgba(var(--foreground-rgb), 0.1);
+    border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1); */
     /* background: rgba(var(--foreground-rgb), 0.02); */
     /* border: 1px solid rgba(var(--foreground-rgb), 0.1); */
     /* border-left: 6px solid rgba(var(--brand-rgb), 1); */
     /* box-shadow: inset 0 0 8px 2px rgba(var(--foreground-rgb), 0.1); */
-    border-radius: 8px;
+    /* border-radius: 8px; */
     /* border-top-left-radius: 0;
     border-bottom-left-radius: 0; */
     & section-heading {
@@ -155,7 +169,7 @@ function get_first_code_block(block: BlockContent): Code | null {
         padding-left: 16px;
         padding-top: 16px;
         padding-right: 16px;
-        padding-bottom: 8px;
+        padding-bottom: 0;
         color: rgba(var(--foreground-rgb), 1);
         /* border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1); */
         font-weight: bold;
@@ -170,7 +184,7 @@ function get_first_code_block(block: BlockContent): Code | null {
         gap: 8px;
         padding: 16px;
         border-radius: 8px;
-        border: 1px solid rgba(var(--foreground-rgb), 0.1);
+        /* border: 1px solid rgba(var(--foreground-rgb), 0.1); */
         /* box-shadow: inset 0 0 8px 2px rgba(var(--foreground-rgb), 0.1); */
     }
 }

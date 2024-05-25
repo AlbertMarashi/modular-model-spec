@@ -17,7 +17,7 @@ toggle-wrapper {
     display: flex;
     width: 40px;
     height: 20px;
-    background: #eee;
+    background: rgba(var(--foreground-rgb), 0.1);
     border-radius: 20px;
     position: relative;
     transition: all .2s ease-in-out;

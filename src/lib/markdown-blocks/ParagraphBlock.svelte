@@ -12,6 +12,6 @@ export let block: Paragraph
 p {
     margin: 0;
     width: 100%;
-    color: rgba(var(--foreground-rgb), 0.8)
+    color: color-mix(in srgb, rgba(var(--color-rgb, var(--background-rgb))) 15%, var(--foreground));
 }
 </style>

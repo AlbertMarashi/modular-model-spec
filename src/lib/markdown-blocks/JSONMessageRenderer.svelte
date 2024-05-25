@@ -4,7 +4,7 @@ import CodeBlock from "./CodeBlock.svelte"
 
 
 export let thread: Thread
-$: console.log(thread)
+
 </script>
 {#each thread as message}
     {#if message instanceof Array}

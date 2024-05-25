@@ -31,43 +31,32 @@ export let type: keyof typeof icons
 .callout {
     display: flex;
     gap: 16px;
+    height: 100%;
     width: 100%;
     padding: 16px;
-    border-radius: 8px;
-    background: color-mix(in srgb, var(--foreground) 10%, transparent);
-    /* border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent); */
+    border-radius: 6px;
+    border-left: 6px solid rgba(var(--color-rgb), 1);
+    background: color-mix(in srgb, rgba(var(--color-rgb), 1) 10%, var(--background));
+    color: color-mix(in srgb, rgba(var(--color-rgb), 1) 90%, var(--foreground));
     & .content {
         padding: 3px 0;
     }
+
 }
 
 .callout.note {
-    background: rgba(var(--blue-rgb), 0.05);
-    border-color: rgba(var(--blue-rgb), 0.2);
-    color: rgba(var(--blue-rgb), 0.7);
+    --color-rgb: var(--blue-rgb);
 }
 
 .callout.error {
-    background: color-mix(in srgb, var(--red) 10%, transparent);
-    border-color: color-mix(in srgb, var(--red) 50%, transparent);
-    & .icon {
-        color: var(--red);
-    }
+    --color-rgb: var(--red-rgb);
 }
 
 .callout.warning {
-    background: color-mix(in srgb, var(--orange) 10%, transparent);
-    border-color: color-mix(in srgb, var(--orange) 50%, transparent);
-    & .icon {
-        color: var(--orange);
-    }
+    --color-rgb: var(--orange-rgb);
 }
 
 .callout.success {
-    background: color-mix(in srgb, var(--green) 10%, transparent);
-    border-color: color-mix(in srgb, var(--green) 50%, transparent);
-    & .icon {
-        color: var(--green);
-    }
+    --color-rgb: var(--green-rgb);
 }
 </style>

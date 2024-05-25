@@ -110,15 +110,15 @@ icon-wrapper {
 
 message {
     padding: 8px;
-    background: rgba(var(--color-rgb), 0.1);
-    border: 0px solid rgba(var(--color-rgb), 0.3);
+    background: rgba(var(--color-rgb), 0.08);
+    border: 1px solid rgba(var(--color-rgb), 0.1);
     display: flex;
     width: 100%;
     flex-direction: column;
     gap: 8px;
     border-radius: 8px;
     &.assistant {
-        --color-rgb: 50, 50, 50;
+        --color-rgb: var(--foreground-rgb);
         &.correct {
             --color-rgb: var(--green-rgb);
         }
@@ -137,8 +137,8 @@ message {
     }
     &.user {
         --color-rgb: var(--foreground-rgb);
-        background: rgba(var(--foreground-rgb), 0.03);
-        border-color: rgba(var(--foreground-rgb), 0.2);
+        background: rgba(var(--foreground-rgb), 0.04);
+        border-color: rgba(var(--foreground-rgb), 0.05);
     }
     & name {
         display: flex;
