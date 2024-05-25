@@ -485,7 +485,7 @@ Datasets which define new message response formats **MUST** be tailored and desi
 
 For example, a dataset that uses a web browsing tool, **MUST** include developer messages that define that tool and it’s behavior in the prompt, and how the assistant **SHOULD** respond to those tools.
 
-It **MUST NOT** assume the existence of such a tool, as that would cause the model to believe it has inherent access to that capability when the developer has not specified that, leading the model to generate invalid or unknown response formats.
+It **MUST NOT** assume the existence of such a tool, as that would cause the model to believe it has inherent access to that capability when the developer has not specified that, leading the model to generate invalid or unexpected response formats.
 :::
 
 ### Active Capabilities
@@ -583,7 +583,7 @@ type CustomSampler = { ... }
 
 ### Non-interactive response format
 <Thread>
-    <SystemConfig config={{ "formats": ["markdown"]}}/>
+    <SystemConfig config={{ "formats": ["html"]}}/>
     <Message role="developer">
     *The developer may instruct the model to behave in non-interactive way, as shown:*
     ```markdown
@@ -679,6 +679,8 @@ All of the `:` delimited values are **RECOMMENDED** be written in the `snake_cas
 When tool uses require the developer to respond or process messages before returning control back to the LLM, they **MUST** specify this via the `halt_on_completion` system setting.
 :::
 
+> TODO, explain how to use the `halt_on_completion` system setting
+
 ### Tool Schema
 
 The desired output format and syntax the LLM should generate for the tool call **SHOULD** be able to be provided by the developer in a variety of different languages and formats, including in natural language.
@@ -763,7 +765,7 @@ Tool schemas can be defined in a variety of different formats, but will work bes
     </Message>
 </Thread>
 
-#### Example 3: `rust` definition ->> `yaml` response
+#### Schema Example: `rust` definition to `yaml` response
 
 <Thread>
     <SystemConfig config={{ "formats": [ "markdown", { "name": "browser:yaml", "halt_on_completion": true } ] }}/>
@@ -772,9 +774,8 @@ Tool schemas can be defined in a variety of different formats, but will work bes
         ## Browse web
         You can use the `browser:yaml` response format to make a GET request to a web page, which will return the text content of that web page using the following schema:
         ```rust
-        // eg: get_page("https://example.com")
         struct GetPage {
-            url: String
+            url: String // eg: url: "https://example.com"
         }
         ```
         ````
@@ -913,7 +914,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
     </Message>
     <Columns>
         <Column>
-            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
+            <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
                 ```browser:json
                 {
                     "query": "new iphone reddit reviews"
@@ -925,7 +926,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
                 ... [ search results ] ...
                 ```
             </Message>
-            <Message role="assistant" end_turn={true} correct={true} halted_on_completion={true}>
+            <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
                 *assistant navigates to a relevant search result url*
                 ```browser:json
                 {
