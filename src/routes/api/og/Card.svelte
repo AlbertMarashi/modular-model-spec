@@ -1,7 +1,7 @@
 <script lang="ts">
 import Logo from "$lib/display/Logo.svelte"
 import Robot from "svelte-material-icons/Robot.svelte"
-import ChevronRight from "svelte-material-icons/ChevronRight.svelte"
+import ChevronDoubleRight from "svelte-material-icons/ChevronDoubleRight.svelte"
 
 export let title: string
 export let description: string | null = null
@@ -23,7 +23,7 @@ export let description: string | null = null
     <div class="fake-button">
         <div class="icon"><Robot size="1.5em"/></div>
         Read the Spec
-        <div class="icon"><ChevronRight size="1.5em"/></div>
+        <div class="icon"><ChevronDoubleRight size="1.5em"/></div>
     </div>
 </div>
 <style>
