@@ -7,7 +7,7 @@
 # Modular Model Spec
 > *Version 0.0.0*
 
-:::tip
+:::note
 Welcome to the **Modular Model Spec**, a comprehensive guide designed to make Large Language Models (LLMs) more:
 
 **Why This Spec Matters**
