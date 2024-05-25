@@ -8,6 +8,11 @@ import Close from "svelte-material-icons/Close.svelte"
 import ExitToApp from "svelte-material-icons/ExitToApp.svelte"
 import Pause from "svelte-material-icons/Pause.svelte"
 import type { Message } from "$lib/types/messages"
+import Robot from "svelte-material-icons/Robot.svelte"
+import CodeBraces from "svelte-material-icons/CodeBraces.svelte"
+import Web from "svelte-material-icons/Web.svelte"
+import HammerScrewdriver from "svelte-material-icons/HammerScrewdriver.svelte"
+import AccountCircle from "svelte-material-icons/AccountCircle.svelte"
 
 export let block: MdxJsxFlowElement
 
@@ -26,12 +31,12 @@ $: attributes = block.attributes.reduce((acc, attr) => {
 $: first_code_block = block.children.find(child => child.type === "code") as Code
 $: lang = first_code_block.lang
 
-const pretty_types = {
-    "assistant": "Assistant Message",
-    "developer": "Developer Message",
-    "platform": "Platform Message",
-    "tool": "Tool Message",
-    "user": "User Message"
+const icons = {
+    "assistant": Robot,
+    "developer": CodeBraces,
+    "platform": Web,
+    "tool": HammerScrewdriver,
+    "user": AccountCircle
 }
 
 </script>
@@ -49,11 +54,14 @@ const pretty_types = {
                 <Icon icon={attributes.correct === true ? Check : Close}/>
             </icon-wrapper>
         {/if}
-        { pretty_types[attributes.role] }
+        <Icon icon={icons[attributes.role]}/>
+        <!-- <MarkdownRenderer markdown={`"role": "${attributes.role}"`}/> -->
+        <code class="role">
+            { attributes.role }
+        </code>
         {#if attributes.role === "assistant"}
-            <format>
-                -&gt;&gt; <code>{ lang || "unspecified" }</code>
-            </format>
+            <format> -&gt;&gt;</format>
+            <code>{ lang || "unspecified" }</code>
         {/if}
     </name>
     <BlocksArray blocks={block.children}/>
@@ -80,6 +88,18 @@ const pretty_types = {
 </message>
 <style>
 
+code {
+    font-family: "Fira Code", monospace;
+    font-size: 14px;
+    font-weight: bold;
+    background: rgba(var(--color-rgb), 0.2);
+    border-radius: 4px;
+    padding: 0 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
 icon-wrapper {
     display: inline-flex;
     align-items: center;
@@ -98,7 +118,7 @@ message {
     gap: 8px;
     border-radius: 8px;
     &.assistant {
-        --color-rgb: var(--purple-rgb);
+        --color-rgb: 50, 50, 50;
         &.correct {
             --color-rgb: var(--green-rgb);
         }
@@ -136,16 +156,6 @@ message {
         gap: 4px;
         font-size: 14px;
         color: color-mix(in srgb, rgba(var(--color-rgb)) 60%, var(--foreground));
-        & code {
-            font-size: 14px;
-            font-weight: bold;
-            background: rgba(var(--color-rgb), 0.2);
-            border-radius: 4px;
-            padding: 0 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 2px;
-        }
         &.halted {
             --color-rgb: var(--purple-rgb);
         }

@@ -52,7 +52,7 @@ type CustomSampler = null
     <section>
         <system-heading>
             <Icon
-                color="orange"
+                color="gray"
                 icon={CodeTags}/>
             System Settings
         </system-heading>
@@ -96,7 +96,7 @@ type CustomSampler = null
 </div>
 <style>
 .system {
-    background: rgba(var(--orange-rgb), 0.1);
+    background: rgba(var(--foreground-rgb), 0.1);
     border-radius: 8px;
     /* border: 1px solid rgba(var(--orange-rgb), 0.2); */
     & section {
@@ -148,10 +148,10 @@ format {
     color: rgba(var(--foreground-rgb), 0.3);
     gap: 4px;
     & code {
-        background: rgba(var(--orange-rgb), 0.1);
+        background: rgba(var(--foreground-rgb), 0.1);
         padding: 0 4px;
         color: rgba(var(--foreground-rgb), 1);
-        border: 1px solid rgba(var(--orange-rgb), 0.4);
+        /* border: 1px solid rgba(var(--foreground-rgb), 0.4); */
         border-radius: 4px;
     }
 }

@@ -685,9 +685,7 @@ The desired output format and syntax the LLM should generate for the tool call *
 
 Tool schemas can be defined in a variety of different formats, but will work best using languages and formats that the model has been pre-trained on.
 
-For example, developers can define the same tool behavior in a variety of different formats and syntaxes
-
-#### Example 1: `typescript` definition `->>` `js` response
+#### Schema Example: `typescript` to `js` response
 
 <Thread>
     <SystemConfig config={{ "formats": [ "markdown", { "name": "browser:js", "halt_on_completion": true } ] }}/>
@@ -724,7 +722,7 @@ For example, developers can define the same tool behavior in a variety of differ
     </Message>
 </Thread>
 
-#### Example 2: `typescript` definition `->>` `json` response
+#### Schema Example: `typescript` to `json` response
 
 <Thread>
     <SystemConfig config={{ "formats": [ "markdown", { "name": "browser:json", "halt_on_completion": true } ] }}/>
@@ -804,7 +802,7 @@ For example, developers can define the same tool behavior in a variety of differ
     </Message>
 </Thread>
 
-#### Example 4: `python` definition ->> `python` response
+#### Schema Example: `python` definition to `python` response
 
 <Thread>
     <SystemConfig config={{ "formats": [ "markdown", { "name": "browser:python", "halt_on_completion": true } ] }}/>
@@ -842,11 +840,13 @@ For example, developers can define the same tool behavior in a variety of differ
         ```
     </Message>
     <Message role="user">
+        *Model responds in markdown conversational format*
         ```markdown
         Play me some cool 70s jazz fusion
         ```
     </Message>
     <Message role="assistant" end_turn={false} correct={true} halted_on_completion={true}>
+        *Model responds in non-interactive `music_control:python` format, which is a tool call that the system handles*
         ```music_control:python
         play("Mahavishnu Orchestra", "Dance of Maya")
         enqueue("Billy Cobham", "Heather")
@@ -1115,7 +1115,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
 > **Developer**
 >
 >
-> ```markdown
+> ````markdown
 > From the following news article:
 > "[news article text about fundrasing event]"
 >
@@ -1128,7 +1128,7 @@ Some tasks require using the same tool in multiple consecutive `assistant` messa
 >     context: string
 > }[]
 > ```
-> ```
+> ````
 >
 
 > **User**
