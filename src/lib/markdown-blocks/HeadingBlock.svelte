@@ -8,6 +8,7 @@ import Icon from "$lib/display/Icon.svelte"
 import Link from "svelte-material-icons/Link.svelte"
 
 export let block: Heading
+let heading: HTMLElement
 
 let highlight = false
 $: plain_text = get_plain_text(block.children)
@@ -18,6 +19,7 @@ $: if(browser && $page.url.hash === "#" + id) {
     setTimeout(() => {
         highlight = false
     }, 1000)
+    if (heading) heading.scrollIntoView()
 }
 
 function copy_link() {
@@ -28,6 +30,7 @@ function copy_link() {
 </script>
 <svelte:element
     this={ "h" + block.depth }
+    bind:this={ heading }
     {id}
     class="heading"
     class:highlight

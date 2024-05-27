@@ -26,6 +26,7 @@ let code_el: HTMLElement
 const renames: Record<string, string> = {
     "jsonl": "json",
     "pseudocode": "plaintext",
+    "voice": "markdown",
 }
 
 $: highlighted_code = hljs.highlight(code, {
