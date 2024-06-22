@@ -147,21 +147,10 @@ inner {
 
 .thread.thread {
     max-width: 100%;
-    /* margin-top: 16px; */
     margin-bottom: 16px;
     display: flex;
-    /* background: rgba(var(--foreground-rgb), 0.02); */
     flex-direction: column;
     width: 100%;
-    /* border-top: 1px solid rgba(var(--foreground-rgb), 0.1);
-    border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1); */
-    /* background: rgba(var(--foreground-rgb), 0.02); */
-    /* border: 1px solid rgba(var(--foreground-rgb), 0.1); */
-    /* border-left: 6px solid rgba(var(--brand-rgb), 1); */
-    /* box-shadow: inset 0 0 8px 2px rgba(var(--foreground-rgb), 0.1); */
-    /* border-radius: 8px; */
-    /* border-top-left-radius: 0;
-    border-bottom-left-radius: 0; */
     & section-heading {
         display: flex;
         align-items: center;
@@ -171,21 +160,17 @@ inner {
         padding-right: 16px;
         padding-bottom: 0;
         color: rgba(var(--foreground-rgb), 1);
-        /* border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1); */
         font-weight: bold;
         font-size: 16px;
         font-family: "Fira Code", monospace;
     }
 
     & messages {
-        /* background: rgba(var(--foreground-rgb), 0.02); */
         display: flex;
         flex-direction: column;
         gap: 8px;
         padding: 16px;
         border-radius: 8px;
-        /* border: 1px solid rgba(var(--foreground-rgb), 0.1); */
-        /* box-shadow: inset 0 0 8px 2px rgba(var(--foreground-rgb), 0.1); */
     }
 }
 </style>

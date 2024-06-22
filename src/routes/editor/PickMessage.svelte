@@ -14,7 +14,8 @@ let dispatch = createEventDispatcher<{ delete: void }>()
 
 export let message: Message | null
 export let index: number
-export let selected: number
+export let selected: number | null | "config"
+export let deletable: boolean = true
 
 let base_messages: Message[] = [
     {
@@ -57,7 +58,7 @@ const icons: Record<typeof base_messages[number]["role"], ComponentType> = {
     on:click={ () => selected = index }>
     <message-type>
         Add a new message
-        {#if index === selected}
+        {#if index === selected && deletable}
             <button
                 class="delete"
                 on:click={ () => dispatch("delete") }>

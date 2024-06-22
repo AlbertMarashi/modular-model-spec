@@ -24,7 +24,7 @@ header {
     align-items: center;
     padding: 0.5rem;
     min-height: 60px;
-    border-bottom: 1px solid rgba(var(--foreground-rgb), 0.05);
+    border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1);
 }
 
 inner {

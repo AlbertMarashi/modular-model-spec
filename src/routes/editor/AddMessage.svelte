@@ -43,6 +43,10 @@ button {
     padding: 8px 12px;
     border-radius: 50px;
     align-self: center;
+    &:hover, &:focus {
+        background: color-mix(in srgb, rgba(var(--color-rgb)) 15%, var(--background));
+        border-color: rgba(var(--color-rgb), 0.3);
+    }
 }
 
 </style>

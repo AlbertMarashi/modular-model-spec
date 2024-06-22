@@ -13,11 +13,15 @@ import AccountCircle from "svelte-material-icons/AccountCircle.svelte"
 import Delete from "svelte-material-icons/Delete.svelte"
 import CodeEditor from "./CodeEditor.svelte"
 import AddMessage from "./AddMessage.svelte"
-import { createEventDispatcher } from "svelte"
+import CloseCircle from "svelte-material-icons/CloseCircle.svelte"
+import { createEventDispatcher, type ComponentProps } from "svelte"
+import Toggle from "$lib/controls/Toggle.svelte"
+import type AllowedAssistantFormat from "./AllowedAssistantFormat.svelte"
 
 export let message: Message
-export let selected: number
+export let selected: number | null | "config"
 export let index: number
+export let formats: ComponentProps<AllowedAssistantFormat>["format"][]
 
 let dispatch = createEventDispatcher<{
     insert_above: void,
@@ -26,6 +30,8 @@ let dispatch = createEventDispatcher<{
 }>()
 
 $: lang = message.role === "assistant" ? message.format : "markdown"
+
+$: format = message.role === "assistant" ? formats.find(f => f.name === message.format) : null
 
 const icons = {
     "assistant": Robot,
@@ -46,6 +52,7 @@ const icons = {
     class:selected={ selected === index }
     class:user={ message.role === "user" }
     role="presentation"
+    on:focusin={ () => selected = index }
     on:click={ () => selected = index }>
     {#if index === selected}
         <AddMessage
@@ -59,18 +66,35 @@ const icons = {
             </icon-wrapper>
         {/if}
         <Icon icon={icons[message.role]}/>
-        <!-- <MarkdownRenderer markdown={`"role": "${attributes.role}"`}/> -->
         <code class="role">
             { message.role }
         </code>
         {#if message.role === "assistant"}
             <format>-&gt;&gt;</format>
-            <code>{ lang || "unspecified" }</code>
+            <input
+                class="code"
+                size={message.format.length - 1 || 1}
+                bind:value={ message.format }/>
+
+            {#if !format}
+                <format class="error">
+                    -&gt;&gt;
+                    <code>
+                        <Icon
+                            --size="16px"
+                            icon={CloseCircle}/>
+                        Used unspecified format
+                    </code>
+                </format>
+            {/if}
         {/if}
 
-        {#if message.role === "context" && message.name}
+        {#if message.role === "context" && message.name !== null}
             <format> -&gt;&gt;</format>
-            <code>{ message.name }</code>
+            <input
+                class="code"
+                size={message.name.length - 1 || 1}
+                bind:value={ message.name }/>
         {/if}
         {#if index === selected}
             <button
@@ -83,7 +107,7 @@ const icons = {
     <CodeEditor
         bind:code={ message.content }
         bind:language={ lang }/>
-    {#if "end_turn" in message && message.end_turn === true}
+    {#if message.role === "assistant" && (message.end_turn === true || selected === index)}
         <format>
             <code>
                 <Icon
@@ -91,9 +115,12 @@ const icons = {
                     icon={ExitToApp}/>
                 end_turn
             </code>
+            {#if selected === index}
+                <Toggle bind:value={ message.end_turn }/>
+            {/if}
         </format>
     {/if}
-    {#if "halted_on_completion" in message && message.halted_on_completion === true}
+    {#if message.role === "assistant" && format && format.halt_on_completion === true}
         <format class="halted">
             <code>
                 <Icon
@@ -103,6 +130,7 @@ const icons = {
             </code>
         </format>
     {/if}
+
     {#if index === selected}
         <AddMessage
             position="bottom"
@@ -110,16 +138,28 @@ const icons = {
     {/if}
 </message>
 <style>
-code {
+code, .code {
     font-family: "Fira Code", monospace;
     font-size: 14px;
     font-weight: bold;
+    color: inherit;
     background: rgba(var(--color-rgb), 0.2);
     border-radius: 4px;
-    padding: 0 4px;
+    padding: 2px 4px;
     display: inline-flex;
     align-items: center;
+    border: 0;
+    appearance: none;
+    font-size-adjust: 0.5;
+    min-height: 0;
+    line-height: 100%;
     gap: 2px;
+    &.code {
+        padding: 0 4px;
+    }
+    &:focus {
+        outline: 2px solid rgba(var(--color-rgb), 0.3);
+    }
 }
 
 button.delete {
@@ -133,6 +173,9 @@ button.delete {
     margin-left:auto;
     background: rgba(var(--red-rgb), 0.15);
     --color: rgba(var(--red-rgb), 0.5);
+    &:hover, &:focus {
+        background: rgba(var(--red-rgb), 0.3);
+    }
 }
 
 icon-wrapper {
@@ -196,10 +239,14 @@ message {
         align-items: center;
         gap: 4px;
         font-size: 14px;
+        min-height: 20px;
         color: color-mix(in srgb, rgba(var(--color-rgb)) 60%, var(--foreground));
         &.halted {
             --color-rgb: var(--purple-rgb);
         }
     }
+}
+.error {
+    --color-rgb: var(--red-rgb);
 }
 </style>

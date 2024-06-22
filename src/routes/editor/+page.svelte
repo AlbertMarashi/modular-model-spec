@@ -1,34 +1,19 @@
 <script lang="ts">
-import Button from "$lib/controls/Button.svelte"
-import type { Message } from "$lib/types/messages"
-import AddMessage from "./AddMessage.svelte"
+import Label from "$lib/display/Label.svelte"
 import CodeEditor from "./CodeEditor.svelte"
-import EditorMessage from "./EditorMessage.svelte"
-import PickMessage from "./PickMessage.svelte"
+import { thread_to_tokens, type Thread } from "./editor_types"
+import EditorThread from "./EditorThread.svelte"
 
-
-type Thread = {
-    system_config: SystemConfig
-    messages: Array<Message | null>
-}
-
-type SystemConfig = {
-    formats: AllowedAssistantFormats[]
-}
-
-type AllowedAssistantFormats = {
-    name: string
-    halt_on_start: boolean
-    halt_on_completion: boolean
-    sampler: "json" | "text"
-}
 
 let thread: Thread = {
-    system_config: {
-        formats: [
-
-        ]
-    },
+    allowed_formats: [
+        {
+            name: "markdown",
+            halt_on_start: false,
+            halt_on_completion: false,
+            sampler: null,
+        }
+    ],
     messages: [
         {
             role: "developer",
@@ -52,57 +37,48 @@ let thread: Thread = {
     ]
 }
 
-let selected: number = thread.messages.length - 1
-
-function insert(index: number) {
-    thread.messages.splice(index, 0, null)
-    thread.messages = thread.messages
-
-    selected = index
-}
-
-function delete_message(index: number) {
-    thread.messages.splice(index, 1)
-    thread.messages = thread.messages
-    selected = null
-}
 
 </script>
-<editor-wrapper>
-    {#each thread.messages as message, i}
-        {#if message !== null}
-            <EditorMessage
-                index={i}
-                bind:selected
-                on:insert_above={ () => insert(i) }
-                on:insert_below={ () => insert(i + 1) }
-                on:delete={ () => delete_message(i) }
-                bind:message/>
-        {:else}
-            <PickMessage
-                index={i}
-                on:delete={ () => delete_message(i) }
-                bind:selected
-                bind:message/>
-        {/if}
-    {/each}
-</editor-wrapper>
+<editor-container>
+    <aside>
+        <EditorThread bind:thread/>
+    </aside>
 
-<!-- <CodeEditor
-    code={JSON.stringify(thread, null, 4)}
-    language="json"/> -->
+    <aside>
+        <Label text="Message Format"/>
+        <CodeEditor
+            code={JSON.stringify(thread, null, 4)}
+            editable={false}
+            language="json"/>
+
+        <Label text="Example Tokens"/>
+        <CodeEditor
+            code={thread_to_tokens(thread)}
+            editable={false}
+            language="tokens"/>
+    </aside>
+</editor-container>
 
 <style>
 
-editor-wrapper {
+editor-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    flex: 1;
+}
+
+
+aside {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px;
+    padding: 32px;
+    border-left: 1px solid rgba(var(--foreground-rgb), 0.1);
+    flex: 1;
     gap: 16px;
-
+    &:first-child {
+        border-left: none;
+    }
 }
 
 </style>
