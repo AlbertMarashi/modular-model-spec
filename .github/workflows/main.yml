@@ -54,7 +54,7 @@ jobs:
           -u $SURREAL_USER \
           -p $SURREAL_PASS \
           --ns $PUBLIC_SURREAL_NAMESPACE \
-          --db modular-model-spec \
+          --db modular_spec \
           database_schema.surql
 
         # Define the token using echo to pipe the SQL command
@@ -64,7 +64,7 @@ jobs:
           -u $SURREAL_USER \
           -p $SURREAL_PASS \
           --ns $PUBLIC_SURREAL_NAMESPACE \
-          --db modular-model-spec
+          --db modular_spec
     - name: Deploy Project to Vercel
       run: |
         if [ "${{ github.ref_name }}" == "main" ]; then
