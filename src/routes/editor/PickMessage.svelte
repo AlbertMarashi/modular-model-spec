@@ -21,25 +21,27 @@ let base_messages: Message[] = [
     {
         role: "assistant",
         format: "markdown",
-        content: "This is an assistant message",
+        content: `This is an assistant message, a type of message that the model responds to.
+
+            Assistant messages always define a response format via the \`format\` field, in this case, the \`markdown\` format. The assistant message also defines a \`end_turn\` field, which is a boolean value that indicates whether the assistant has finished responding.`,
         end_turn: true,
     },
     {
         role: "developer",
-        content: "This is a developer message",
+        content: "This is a developer message, a type of message defined by the developer building the LLM powered application, often referred to as the `system` message.",
     },
     {
         role: "platform",
-        content: "This is a platform message",
+        content: "This is a platform message, a type of message defined by the platform or API service that the developer is utilizing.",
     },
     {
         role: "context",
         name: "context_name",
-        content: "This is a context message",
+        content: "This is a context message, a type of message that the developer can use to provide contextual information to the model. Content inside of `context` messages are treated as information rather than instructions, except where specified by the developer.",
     },
     {
         role: "user",
-        content: "This is a user message",
+        content: "This is a user message, a type of message sent by the end-user of the LLM-augmented application.",
     },
 ]
 

@@ -18,23 +18,18 @@ let thread: Thread = {
     messages: [
         {
             role: "developer",
-            content: "This is a developer message"
+            content: "This is a developer message, a type of message defined by the developer building the LLM powered application, often referred to as the `system` message by other formats and specs.\n\nYou can click to edit me"
+        },
+        {
+            role: "user",
+            content: "This is a user message, a type of message sent by the end-user of the LLM-augmented application."
         },
         {
             role: "assistant",
             format: "markdown",
-            content: "This is an assistant message",
+            content: "This is an assistant message, a type of message that the model responds to.\n\nAssistant messages always define a response format via the `format` field, in this case, the `markdown` format. The assistant message also defines a `end_turn` field, which is a boolean value that indicates whether the assistant has finished responding.",
             end_turn: true,
         },
-        {
-            role: "context",
-            name: "context_name",
-            content: "This is a context message"
-        },
-        {
-            role: "user",
-            content: "This is a user message"
-        }
     ]
 }
 
@@ -54,7 +49,6 @@ let thread: Thread = {
             code={JSON.stringify(thread, null, 4)}
             editable={false}
             language="json"/>
-
         <Label text="Example Tokens"/>
         <CodeEditor
             code={thread_to_tokens(thread)}

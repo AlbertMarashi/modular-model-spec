@@ -182,7 +182,7 @@ We will be using a visual representation of this format across the spec, and exa
     <Columns>
         <Message role="developer">
             ```markdown
-            This is a developer message, a type of message defined by the developer building the LLM powered application, often referred to as the `system` message.
+            This is a developer message, a type of message defined by the developer building the LLM powered application, often referred to as the `system` message by other formats and specs.
             ```
         </Message>
         ```ts
