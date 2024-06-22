@@ -34,7 +34,7 @@ function delete_message(index: number) {
         <messages>
             <SystemConfig
                 bind:selected
-                bind:formats={ thread.allowed_formats }/>
+                bind:thread/>
             {#if thread.messages.length > 0}
                 {#each thread.messages as message, i}
                     {#if message !== null}

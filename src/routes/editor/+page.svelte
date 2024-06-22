@@ -1,4 +1,5 @@
 <script lang="ts">
+import Toggle from "$lib/controls/Toggle.svelte"
 import Label from "$lib/display/Label.svelte"
 import PageHead from "$lib/PageHead.svelte"
 import CodeEditor from "./CodeEditor.svelte"
@@ -33,6 +34,7 @@ let thread: Thread = {
     ]
 }
 
+let pretty = true
 
 </script>
 <PageHead
@@ -44,14 +46,17 @@ let thread: Thread = {
     </aside>
 
     <aside>
-        <Label text="Message Format"/>
+        <Label text="Training Example"/>
         <CodeEditor
             code={JSON.stringify(thread, null, 4)}
             editable={false}
             language="json"/>
-        <Label text="Example Tokens"/>
+        <Label text="Example Training Tokens"/>
+        <format>
+            Pretty? <Toggle bind:value={ pretty }/>
+        </format>
         <CodeEditor
-            code={thread_to_tokens(thread)}
+            code={thread_to_tokens(thread, pretty)}
             editable={false}
             language="tokens"/>
     </aside>
@@ -64,6 +69,14 @@ editor-container {
     flex-direction: row;
     gap: 16px;
     flex: 1;
+}
+
+format {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-family: "Fira Code", monospace;
 }
 
 

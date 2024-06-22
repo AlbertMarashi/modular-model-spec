@@ -6,18 +6,24 @@ import type { Thread } from "./editor_types"
 import Chip from "$lib/display/Chip.svelte"
 import Icon from "$lib/display/Icon.svelte"
 import CodeTags from "svelte-material-icons/CodeTags.svelte"
+import AddMessage from "./AddMessage.svelte"
 
 export let selected: number | null | "config"
-export let formats: Thread["allowed_formats"]
+export let thread: Thread
 
 function add_format() {
-    formats.push({
+    thread.allowed_formats.push({
         name: "edit_name",
         halt_on_start: false,
         halt_on_completion: false,
         sampler: null,
     })
-    formats = formats
+    thread.allowed_formats = thread.allowed_formats
+}
+
+function add_message() {
+    thread.messages.unshift(null)
+    thread.messages = thread.messages
 }
 </script>
 <system-config
@@ -31,7 +37,7 @@ function add_format() {
             icon={CodeTags}/>
         System Settings
     </system-heading>
-    {#each formats as format}
+    {#each thread.allowed_formats as format}
         <AllowedAssistantFormat
             selected={selected === "config"}
             bind:format/>
@@ -40,6 +46,11 @@ function add_format() {
         <Chip
             label="Add format"
             on:click={ add_format }/>
+    {/if}
+    {#if selected === "config"}
+        <AddMessage
+            position="bottom"
+            on:click={ add_message }/>
     {/if}
 </system-config>
 
@@ -52,6 +63,7 @@ system-heading {
 
 system-config {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: start;
     gap: 12px;
