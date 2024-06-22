@@ -43,7 +43,7 @@ async function token_data(locals: App.Locals) {
         ? await sign_jwt({
             ns: PUBLIC_SURREAL_NAMESPACE,
             id: user_id,
-            db: "modulmodular_specec",
+            db: "modular_spec",
             tk: "modular_token",
             sc: "users",
         })
