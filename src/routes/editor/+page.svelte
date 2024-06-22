@@ -1,5 +1,6 @@
 <script lang="ts">
 import Label from "$lib/display/Label.svelte"
+import PageHead from "$lib/PageHead.svelte"
 import CodeEditor from "./CodeEditor.svelte"
 import { thread_to_tokens, type Thread } from "./editor_types"
 import EditorThread from "./EditorThread.svelte"
@@ -39,6 +40,9 @@ let thread: Thread = {
 
 
 </script>
+<PageHead
+    description="Message editor for the modular model spec"
+    title="Message Editor"/>
 <editor-container>
     <aside>
         <EditorThread bind:thread/>

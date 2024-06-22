@@ -6,10 +6,12 @@ export let dark_mode = true
 </script>
 <header>
     <inner>
-        <logo-area>
+        <a
+            class="logo-area"
+            href="/">
             <Logo size={32}/>
             <strong>Modular Model</strong> Spec
-        </logo-area>
+        </a>
 
         <right>
             <strong>Dark Mode</strong>
@@ -43,7 +45,7 @@ right {
     gap: 8px;
 }
 
-logo-area {
+.logo-area {
     display: flex;
     flex-direction: row;
     align-items: center;
