@@ -1,9 +1,21 @@
 <script>
+import { page } from "$app/stores"
+import AccountPopout from "$lib/auth/AccountPopout.svelte"
 import Toggle from "$lib/controls/Toggle.svelte"
+import Chip from "$lib/display/Chip.svelte"
 import Logo from "$lib/display/Logo.svelte"
+import { signIn } from "@auth/sveltekit/client"
 
+let account_popout_opened = false
 export let dark_mode = true
+export async function login() {
+    await signIn("github", {
+        callbackUrl: "/",
+    })
+}
+
 </script>
+<AccountPopout bind:opened={ account_popout_opened }/>
 <header>
     <inner>
         <a
@@ -16,6 +28,15 @@ export let dark_mode = true
         <right>
             <strong>Dark Mode</strong>
             <Toggle bind:value={ dark_mode }/>
+            {#if !$page.data.session}
+                <Chip
+                    label="Login"
+                    on:click={ login }/>
+            {:else}
+                <Chip
+                    label={$page.data.session.user.name ?? "Unknown"}
+                    on:click={ () => account_popout_opened = true }/>
+            {/if}
         </right>
     </inner>
 </header>
