@@ -18,7 +18,7 @@ export let opened: boolean
 async function logout() {
     await signOut({ callbackUrl: "/" })
     await invalidateAll()
-    await goto("/login")
+    await goto("/")
 }
 </script>
 {#if opened}
