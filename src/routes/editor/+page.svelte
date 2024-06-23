@@ -69,6 +69,7 @@ editor-container {
     flex-direction: row;
     gap: 16px;
     flex: 1;
+    overflow-y: auto;
 }
 
 format {
