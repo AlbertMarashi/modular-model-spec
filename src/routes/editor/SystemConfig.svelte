@@ -3,7 +3,7 @@
 <script lang="ts">
 import AllowedAssistantFormat from "./AllowedAssistantFormat.svelte"
 import type { Thread } from "./editor_types"
-import Chip from "$lib/display/Chip.svelte"
+import Chip from "$lib/controls/Chip.svelte"
 import Icon from "$lib/display/Icon.svelte"
 import CodeTags from "svelte-material-icons/CodeTags.svelte"
 import AddMessage from "./AddMessage.svelte"
@@ -14,9 +14,9 @@ export let thread: Thread
 function add_format() {
     thread.allowed_formats.push({
         name: "edit_name",
-        halt_on_start: false,
+        // halt_on_start: false,
         halt_on_completion: false,
-        sampler: null,
+    // sampler: null,
     })
     thread.allowed_formats = thread.allowed_formats
 }

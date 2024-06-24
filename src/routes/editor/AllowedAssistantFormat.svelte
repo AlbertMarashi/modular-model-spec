@@ -6,9 +6,9 @@ import Pause from "svelte-material-icons/Pause.svelte"
 export let selected: boolean
 export let format: {
     name: string
-    halt_on_start: boolean
     halt_on_completion: boolean
-    sampler: "json" | null
+// halt_on_start: boolean
+    // sampler: "json" | null
 }
 
 </script>

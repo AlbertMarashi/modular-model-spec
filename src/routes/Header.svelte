@@ -2,7 +2,7 @@
 import { page } from "$app/stores"
 import AccountPopout from "$lib/auth/AccountPopout.svelte"
 import Toggle from "$lib/controls/Toggle.svelte"
-import Chip from "$lib/display/Chip.svelte"
+import Chip from "$lib/controls/Chip.svelte"
 import Logo from "$lib/display/Logo.svelte"
 import { signIn } from "@auth/sveltekit/client"
 

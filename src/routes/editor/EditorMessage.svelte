@@ -5,11 +5,6 @@ import Close from "svelte-material-icons/Close.svelte"
 import ExitToApp from "svelte-material-icons/ExitToApp.svelte"
 import Pause from "svelte-material-icons/Pause.svelte"
 import type { Message } from "$lib/types/messages"
-import Robot from "svelte-material-icons/Robot.svelte"
-import CodeBraces from "svelte-material-icons/CodeBraces.svelte"
-import Web from "svelte-material-icons/Web.svelte"
-import HammerScrewdriver from "svelte-material-icons/HammerScrewdriver.svelte"
-import AccountCircle from "svelte-material-icons/AccountCircle.svelte"
 import Delete from "svelte-material-icons/Delete.svelte"
 import CodeEditor from "./CodeEditor.svelte"
 import AddMessage from "./AddMessage.svelte"
@@ -17,6 +12,7 @@ import CloseCircle from "svelte-material-icons/CloseCircle.svelte"
 import { createEventDispatcher, type ComponentProps } from "svelte"
 import Toggle from "$lib/controls/Toggle.svelte"
 import type AllowedAssistantFormat from "./AllowedAssistantFormat.svelte"
+import { icons } from "./editor_types"
 
 export let message: Message
 export let selected: number | null | "config"
@@ -33,13 +29,7 @@ $: lang = message.role === "assistant" ? message.format : "markdown"
 
 $: format = message.role === "assistant" ? formats.find(f => f.name === message.format) : null
 
-const icons = {
-    "assistant": Robot,
-    "developer": CodeBraces,
-    "platform": Web,
-    "context": HammerScrewdriver,
-    "user": AccountCircle
-}
+
 
 </script>
 <message

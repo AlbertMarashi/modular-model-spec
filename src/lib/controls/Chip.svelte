@@ -6,7 +6,7 @@ export let left_icon: ComponentType | undefined = undefined
 export let label: string | undefined = undefined
 export let disabled: boolean = false
 export let interactive: boolean = true
-export let style: "tonal" | "outline" | "filled" = "outline"
+export let style: "tonal" | "translucent" | "outline" | "filled" = "outline"
 export let small: boolean = false
 </script>
 
@@ -17,6 +17,7 @@ export let small: boolean = false
     class:outline={ style === "outline" }
     class:small
     class:tonal={ style === "tonal" }
+    class:translucent={ style === "translucent" }
     {disabled}
     on:click>
     {#if left_icon}
@@ -35,9 +36,9 @@ export let small: boolean = false
 
 button {
     display: flex;
-    background: rgba(var(--foreground-rgb), 0.04);
+    /* background: rgba(var(--foreground-rgb), 0.04);
     color: rgb(var(--foreground-rgb));
-    border: 1px solid var(--foreground-rgb);
+    border: 1px solid var(--foreground-rgb); */
     border-radius: 8px;
     align-items: center;
     transition: background-color 0.1s, border-color 0.1s;
@@ -75,12 +76,12 @@ button {
         }
 
         &.tonal {
-            background: rgba(var(--foreground-rgb), 0.05);
+            background: rgba(var(--brand-rgb), 0.2);
             color: rgba(var(--foreground-rgb), 0.8);
 
             &:hover, &:focus {
                 color: rgba(var(--foreground-rgb), 1);
-                background: rgba(var(--brand-rgb), 0.2);
+                background: rgba(var(--brand-rgb), 0.3);
             }
 
             &:active {
@@ -100,6 +101,21 @@ button {
             &:active {
                 background: rgba(var(--brand-rgb), 0.2);
                 box-shadow: none;
+            }
+        }
+
+        &.translucent {
+            background: rgba(var(--foreground-rgb), 0.06);
+            color: rgba(var(--foreground-rgb), 0.8);
+
+            &:hover, &:focus {
+                color: rgba(var(--foreground-rgb), 1);
+                background: rgba(var(--foreground-rgb), 0.2);
+            }
+
+            &:active {
+                color: rgba(var(--foreground-rgb), 1);
+                background: rgba(var(--foreground-rgb), 0.3);
             }
         }
 

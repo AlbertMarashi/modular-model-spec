@@ -10,7 +10,7 @@ async function get_surreal_db_client() {
         auth: {
             username: SURREAL_USER,
             password: SURREAL_PASS
-        }
+        },
     })
 
     return db
