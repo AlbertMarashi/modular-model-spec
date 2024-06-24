@@ -50,7 +50,7 @@
     "remark": "^15.0.1",
     "satori": "^0.10.13",
     "satori-html": "^0.3.2",
-    "surrealdb.js": "1.0.0-beta.8",
+    "surrealdb.js": "1.0.0-beta.7",
     "svelte-material-icons": "^3.0.5",
     "svelte-parse": "^0.1.0",
     "svelte-preprocess-markdown": "^2.7.3",
