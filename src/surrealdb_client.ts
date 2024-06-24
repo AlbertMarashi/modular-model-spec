@@ -4,7 +4,12 @@ import { Surreal } from "surrealdb.js"
 export async function safe_surreal_db_client(token: string | null) {
     const db = new Surreal()
 
-    await db.connect(`${PUBLIC_SURREAL_HOST}/rpc`, {
+    const surreal_host = new URL(PUBLIC_SURREAL_HOST)
+
+    if (surreal_host.protocol === "http:") surreal_host.protocol = "ws:"
+    if (surreal_host.protocol === "https:") surreal_host.protocol = "wss:"
+    surreal_host.pathname = "/rpc"
+    await db.connect(surreal_host, {
         namespace: PUBLIC_SURREAL_NAMESPACE,
         database: "modular_spec",
         auth: token ?? undefined,
