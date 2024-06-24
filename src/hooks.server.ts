@@ -1,20 +1,14 @@
 import { handle as auth_handler } from "./auth"
 import { safe_surreal_db_client } from "./surrealdb_client"
-import { surrealdb_admin } from "./surrealdb_admin"
 import { PUBLIC_SURREAL_NAMESPACE } from "$env/static/public"
 import { sign_jwt } from "$lib/utils/jwt"
+import { sequence } from "@sveltejs/kit/hooks"
 
-export async function handle({ event, resolve }) {
-    event.locals.admin_db = await surrealdb_admin
-
-    const new_resolve = async (e: typeof event) => {
-        await token_data(e.locals)
-        e.locals.db = async () => await safe_surreal_db_client(event.locals.token)
-        return resolve(e)
-    }
-
-    return await auth_handler({ event, resolve: new_resolve })
-}
+export const handle = sequence(
+    auth_handler,
+    token_data,
+    setup_client_db,
+)
 
 export async function handleError({ error }) {
     console.error(error)
@@ -32,8 +26,14 @@ export async function handleError({ error }) {
     }
 }
 
-async function token_data(locals: App.Locals) {
-    const session = await locals.auth()
+
+async function setup_client_db({ event, resolve }: Parameters<typeof handle>[0]) {
+    event.locals.db = async () => await safe_surreal_db_client(event.locals.token)
+    return resolve(event)
+}
+
+async function token_data({ event, resolve }: Parameters<typeof handle>[0]) {
+    const session = await event.locals.auth()
     const user_id = session?.user?.id
 
     /// TODO: Should we be generating this every time?
@@ -49,6 +49,8 @@ async function token_data(locals: App.Locals) {
         })
         : null
 
-    locals.session = session
-    locals.token = token
+    event.locals.session = session
+    event.locals.token = token
+
+    return resolve(event)
 }

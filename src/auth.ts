@@ -11,7 +11,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
             // if not, we will create the account and user
             if (user && account && account.provider !== "credentials") {
                 // return true
-                const surreal = await surrealdb_admin
 
                 // Cases
                 // 1. User exists in the database with the same email address and has an account with the provider
@@ -22,13 +21,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
                 // A user might exist in the database with the same email address, but not have an account with the provider
                 // we first need to check if the user with the email address exists
-                const [[existing_user]] = await surreal.query<[({ id: string } | null)[]]>(
+                const [[existing_user]] = await surrealdb_admin.query<[({ id: string } | null)[]]>(
                     "SELECT id FROM user WHERE email = $email LIMIT 1",
                 { user: user.email }
                 )
 
                 // Check if the account exists
-                const [[existing_account]] = await surreal.query<[({ id: string, user: string } | null)[]]>(
+                const [[existing_account]] = await surrealdb_admin.query<[({ id: string, user: string } | null)[]]>(
                     "SELECT id, user FROM account WHERE provider_id = $provider_id AND provider = $provider LIMIT 1",
                 {
                     provider_id: account.providerAccountId,
@@ -38,14 +37,14 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
                 if (existing_account && !existing_user) {
                     // If the account exists, but the user does not, that means we need to update the user's email address
-                    await surreal.query(
+                    await surrealdb_admin.query(
                         "UPDATE user SET email = $email WHERE id = $id",
                         { email: user.email, id: existing_account.user }
                     )
                 } else if (existing_user && !existing_account) {
                     // If the user exists, but the account does not, that means we need to create the account
                     // and link it to the user
-                    await surreal.query(
+                    await surrealdb_admin.query(
                         `
                         CREATE ONLY account CONTENT {
                             user: $user_id,
@@ -61,7 +60,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                     )
                 } else if (!existing_user && !existing_account) {
                     // If the user does not exist, we need to create the user and the account
-                    const [new_user] = await surreal.query<[{ id: string }]>(
+                    const [new_user] = await surrealdb_admin.query<[{ id: string }]>(
                         `
                         CREATE ONLY user CONTENT $user RETURN id
                         `,
@@ -73,7 +72,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                             }
                         })
 
-                    await surreal.query(
+                    await surrealdb_admin.query(
                         `
                         CREATE ONLY account CONTENT {
                             user: $user_id,
@@ -89,7 +88,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                     )
                 } else if (existing_user && existing_account) {
                     // If both the user and the account exist, we need to update the user's settings
-                    await surreal.query(
+                    await surrealdb_admin.query(
                         `
                         UPDATE $user SET
                             name = $name,

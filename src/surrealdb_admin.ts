@@ -11,9 +11,10 @@ async function get_surreal_db_client() {
             username: SURREAL_USER,
             password: SURREAL_PASS
         },
+        versionCheck: false,
     })
 
     return db
 }
 
-export const surrealdb_admin = get_surreal_db_client()
+export const surrealdb_admin = await get_surreal_db_client()

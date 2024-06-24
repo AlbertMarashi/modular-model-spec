@@ -7,7 +7,8 @@ export async function safe_surreal_db_client(token: string | null) {
     await db.connect(`${PUBLIC_SURREAL_HOST}/rpc`, {
         namespace: PUBLIC_SURREAL_NAMESPACE,
         database: "modular_spec",
-        auth: token ?? undefined
+        auth: token ?? undefined,
+        versionCheck: false,
     })
 
     return db
