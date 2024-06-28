@@ -6,7 +6,7 @@ export let left_icon: ComponentType | undefined = undefined
 export let label: string | undefined = undefined
 export let disabled: boolean = false
 export let interactive: boolean = true
-export let style: "tonal" | "translucent" | "outline" | "filled" = "outline"
+export let style: "tonal" | "translucent" | "transparent" | "filled" = "translucent"
 export let small: boolean = false
 </script>
 
@@ -14,10 +14,10 @@ export let small: boolean = false
     class:disabled
     class:filled={ style === "filled" }
     class:interactive
-    class:outline={ style === "outline" }
     class:small
     class:tonal={ style === "tonal" }
     class:translucent={ style === "translucent" }
+    class:transparent={ style === "transparent" }
     {disabled}
     on:click>
     {#if left_icon}

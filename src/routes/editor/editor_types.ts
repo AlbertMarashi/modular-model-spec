@@ -4,17 +4,13 @@ import Web from "svelte-material-icons/Web.svelte"
 import HammerScrewdriver from "svelte-material-icons/HammerScrewdriver.svelte"
 import AccountCircle from "svelte-material-icons/AccountCircle.svelte"
 
-export type DatasetRecord = {
+export type Thread = {
     id: string
-    thread: Thread
+    allowed_formats: Array<AllowedAssistantFormat>
+    messages: Array<Message | null>
     tags: Array<string>
     created_at: Date
     updated_at: Date
-}
-
-export type Thread = {
-    allowed_formats: Array<AllowedAssistantFormat>
-    messages: Array<Message | null>
 }
 
 export type AllowedAssistantFormat = {

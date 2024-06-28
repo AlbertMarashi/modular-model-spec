@@ -6,8 +6,6 @@ DEFINE TABLE user SCHEMAFULL
     PERMISSIONS
         FOR SELECT
             WHERE id = $auth
-            # Allow users to see other users if they are part of the same organisation(s)
-            OR ->member->organisation<-member<-user CONTAINS $auth
         FOR UPDATE
             # Allow users to update their own details
             WHERE id = $auth;
@@ -24,9 +22,6 @@ DEFINE FIELD image ON TABLE user TYPE option<string>;
 DEFINE FIELD password ON TABLE user TYPE option<string>
     # Disable users from changing or reading their password
     PERMISSIONS NONE;
-
-DEFINE FIELD job_roles ON TABLE user TYPE option<array<string>>;
-DEFINE FIELD tasks_desired ON TABLE user TYPE option<array<string>>;
 
 DEFINE INDEX email_index ON TABLE user COLUMNS email UNIQUE;
 
@@ -48,6 +43,21 @@ DEFINE INDEX search_by_provider ON TABLE account COLUMNS provider, provider_id;
 DEFINE SCOPE users;
 -- This needs to be generated using `openssl rand -hex 32`
 -- DEFINE TOKEN siteforge_token on SCOPE users type HS256 VALUE "RANDOM_SECRET_KEY_HEX";
+
+
+DEFINE TABLE thread SCHEMAFULL
+    PERMISSIONS
+        FOR SELECT, UPDATE, CREATE, DELETE
+            WHERE user = $auth;
+
+DEFINE FIELD user ON TABLE thread TYPE record<user> DEFAULT $auth;
+DEFINE FIELD allowed_formats ON TABLE thread TYPE array<object>;
+DEFINE FIELD allowed_formats.* ON TABLE thread FLEXIBLE TYPE object;
+DEFINE FIELD messages ON TABLE thread TYPE array<object>;
+DEFINE FIELD messages.* ON TABLE thread FLEXIBLE TYPE object;
+DEFINE FIELD created_at ON TABLE thread TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE thread TYPE datetime VALUE time::now();
+DEFINE FIELD tags ON TABLE thread TYPE array<string> DEFAULT [];
 
 
 ----------------

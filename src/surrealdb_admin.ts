@@ -6,7 +6,7 @@ async function get_surreal_db_client() {
     const db = new Surreal()
 
     const surreal_host = new URL(PUBLIC_SURREAL_HOST)
-    console.log(surreal_host)
+
     if (surreal_host.protocol === "http:") surreal_host.protocol = "ws:"
     if (surreal_host.protocol === "https:") surreal_host.protocol = "wss:"
     surreal_host.pathname = "/rpc"
@@ -17,7 +17,6 @@ async function get_surreal_db_client() {
             username: SURREAL_USER,
             password: SURREAL_PASS
         },
-        versionCheck: false,
     })
 
     return db

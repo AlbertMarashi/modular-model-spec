@@ -3,13 +3,11 @@ import ScrollbarRegion from "$lib/ScrollbarRegion.svelte"
 import Label from "$lib/display/Label.svelte"
 import CodeEditor from "./CodeEditor.svelte"
 import EditorThread from "./EditorThread.svelte"
-import type { DatasetRecord } from "./editor_types"
+import type { Thread } from "./editor_types"
 import { thread_to_tokens } from "./editor_types"
-import Toggle from "$lib/controls/Toggle.svelte"
 import SingleSelectChipGroup from "$lib/controls/SingleSelectChipGroup.svelte"
-import FlexWrap from "$lib/display/FlexWrap.svelte"
 
-export let selected_record: DatasetRecord
+export let selected_record: Thread
 let pretty = true
 
 let view_type: "editor" | "tokens" | "json" = "editor"
@@ -34,12 +32,12 @@ let view_type: "editor" | "tokens" | "json" = "editor"
                 <EditorThread bind:record={ selected_record }/>
             {:else if view_type === "tokens"}
                 <CodeEditor
-                    code={thread_to_tokens(selected_record.thread, pretty)}
+                    code={thread_to_tokens(selected_record, pretty)}
                     editable={false}
                     language="tokens"/>
             {:else if view_type === "json"}
                 <CodeEditor
-                    code={JSON.stringify(selected_record.thread, null, 4)}
+                    code={JSON.stringify(selected_record, null, 4)}
                     editable={false}
                     language="json"/>
             {/if}

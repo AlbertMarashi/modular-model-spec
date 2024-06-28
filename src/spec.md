@@ -649,7 +649,7 @@ It **MUST NOT** assume the existence of such a tool, as that would cause the mod
 
 The developer consuming an LLM API may enable or override additional capabilities as required by the developer’s use-cases to enable non-interactive and programmatic use.
 
-Latent model capabilities are activated with a combination of `developer` message prompting and system features such as inference halting on message format types or completion, and grammar sampling modes, and allowed or forced response formats specified by the developer.
+Latent model capabilities are activated with a combination of `developer` message prompting and **system** features such as inference halting on message format types or completion, and grammar sampling modes, and allowed or forced response formats specified by the developer.
 
 :::warning
 `user` messages **MAY NOT** enable capabilities such as response formats, and the model **SHOULD** be prevented from generating message formats which have not been explicitly allowed by the developer.

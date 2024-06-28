@@ -3,23 +3,23 @@ import Icon from "$lib/display/Icon.svelte"
 import Forum from "svelte-material-icons/Forum.svelte"
 import EditorMessage from "./EditorMessage.svelte"
 import PickMessage from "./PickMessage.svelte"
-import type { DatasetRecord } from "./editor_types"
+import type { Thread } from "./editor_types"
 import SystemConfig from "./SystemConfig.svelte"
 
-export let record: DatasetRecord
+export let record: Thread
 
-let selected: number | null | "config" = record.thread.messages.length - 1
+let selected: number | null | "config" = record.messages.length - 1
 
 function insert(index: number) {
-    record.thread.messages.splice(index, 0, null)
-    record.thread.messages = record.thread.messages
+    record.messages.splice(index, 0, null)
+    record.messages = record.messages
 
     selected = index
 }
 
 function delete_message(index: number) {
-    record.thread.messages.splice(index, 1)
-    record.thread.messages = record.thread.messages
+    record.messages.splice(index, 1)
+    record.messages = record.messages
     selected = null
 }
 
@@ -34,14 +34,14 @@ function delete_message(index: number) {
         <messages>
             <SystemConfig
                 bind:selected
-                bind:thread={ record.thread }/>
-            {#if record.thread.messages.length > 0}
-                {#each record.thread.messages as message, i}
+                bind:thread={ record }/>
+            {#if record.messages.length > 0}
+                {#each record.messages as message, i}
                     {#if message !== null}
                         <EditorMessage
                             index={i}
                             bind:selected
-                            bind:formats={ record.thread.allowed_formats }
+                            bind:formats={ record.allowed_formats }
                             on:insert_above={ () => insert(i) }
                             on:insert_below={ () => insert(i + 1) }
                             on:delete={ () => delete_message(i) }
@@ -60,7 +60,7 @@ function delete_message(index: number) {
                     index={0}
                     on:delete={ () => delete_message(0) }
                     bind:selected
-                    bind:message={ record.thread.messages[0] }/>
+                    bind:message={ record.messages[0] }/>
             {/if}
         </messages>
     </inner>

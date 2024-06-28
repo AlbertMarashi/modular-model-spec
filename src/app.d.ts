@@ -69,4 +69,5 @@ declare module "@auth/core/adapters" {
 
 	}
 }
+
 export {}

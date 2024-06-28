@@ -44,6 +44,7 @@ function add_message() {
     {/each}
     {#if selected === "config"}
         <Chip
+            style="translucent"
             label="Add format"
             on:click={ add_format }/>
     {/if}

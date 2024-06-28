@@ -1,13 +1,13 @@
 <script lang="ts">
 import Icon from "$lib/display/Icon.svelte"
-import { icons, type DatasetRecord, type Thread } from "./editor_types"
+import { icons, type Thread } from "./editor_types"
 import ChatQuestion from "svelte-material-icons/ChatQuestion.svelte"
 
 
-export let dataset: Array<DatasetRecord>
-export let selected_record: DatasetRecord | null = null
+export let records: Array<Thread>
+export let selected_record: Thread | null = null
 
-function keypress(e: KeyboardEvent, record: DatasetRecord) {
+function keypress(e: KeyboardEvent, record: Thread) {
     if (e.key === "Enter") {
         selected_record = record
     }
@@ -16,13 +16,13 @@ function keypress(e: KeyboardEvent, record: DatasetRecord) {
 <grid-table>
     <header-cell>ID</header-cell>
     <header-cell>Messages</header-cell>
-    {#each dataset as record}
+    {#each records as record}
         <thread-row
             class:selected={ record === selected_record }
             role="row"
             tabindex="0"
             on:focus={ () => selected_record = record }
-            on:keypress={ e => keypress(e, record) }
+            on:keypress={ (e: KeyboardEvent) => keypress(e, record) }
             on:click={ () => selected_record = record }>
             <thread-id
                 role="cell"
@@ -30,7 +30,7 @@ function keypress(e: KeyboardEvent, record: DatasetRecord) {
                 { record.id }
             </thread-id>
             <messages>
-                {#each record.thread.messages as message, i}
+                {#each record.messages as message, i}
                     {#if message === null}
                         <message class="unknown">
                             <Icon icon={ChatQuestion}/>
@@ -109,6 +109,7 @@ thread-row {
 thread-id {
     color: rgba(var(--foreground-rgb), 0.5);
     font-family: "Fira Code", monospace;
+    font-size: 12px;
 }
 
 messages {

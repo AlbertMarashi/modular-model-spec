@@ -13,7 +13,6 @@ export async function safe_surreal_db_client(token: string | null) {
         namespace: PUBLIC_SURREAL_NAMESPACE,
         database: "modular_spec",
         auth: token ?? undefined,
-        versionCheck: false,
     })
 
     return db
