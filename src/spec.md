@@ -53,7 +53,7 @@ Here we have an example of a use case where the developer wants to extract some 
             }
             ```
             - *Model responded in non-conversational JSON format, making it easy for developers to parse the response*
-            - *Model used JSON mode grammar sampling to ensure the response was syntatically valid JSON*
+            - *System applied "JSON mode" grammar sampling to ensure the response was syntatically valid JSON*
     </Message>
     </Column>
         <Column>
