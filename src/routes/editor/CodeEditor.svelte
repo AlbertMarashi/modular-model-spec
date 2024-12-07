@@ -125,16 +125,14 @@ function handle_keydown(event: KeyboardEvent) {
                 <div class="code">{@html line}</div>
             </div>
         {/each}
-        {#if editable}
-            <div class="line textarea">
-                <div class="number">{ Array(digits).fill(" ").join("") }</div>
-                <textarea
-                    bind:this={ textarea }
-                    spellcheck="false"
-                    on:keydown={ handle_keydown }
-                    bind:value={ code }/>
-            </div>
-        {/if}
+        <div class="line textarea">
+            <div class="number">{ Array(digits).fill(" ").join("") }</div>
+            <textarea
+                bind:this={ textarea }
+                spellcheck="false"
+                onkeydown={ handle_keydown }
+                bind:value={ code }></textarea>
+        </div>
         <div class="line">
             <div class="number small">{ Array(digits).fill(" ").join("") }</div>
         </div>
