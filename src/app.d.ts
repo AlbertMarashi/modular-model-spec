@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { AlertsStore } from "$lib/stores/alerts"
-import type { Surreal } from "surrealdb.js"
+import type { Surreal } from "surrealdb"
 import type { Session } from "@auth/core/types"
 
 // See https://kit.svelte.dev/docs/types#app
@@ -33,41 +33,29 @@ declare global {
 	}
 }
 
-declare module "@auth/core/types" {
-	// interface JWT {
-	// 	id: string
-	// 	email: string
-	// 	name: string
-	// 	image?: string
-	// }
 
-	interface User {
-		id: string
-		name: string
-		email: string
-		image?: string,
-		provider?: string,
-	}
+declare module "@auth/sveltekit" {
+    interface User {
+        id: string
+        name: string
+        email: string
+        image?: string,
+        provider?: string,
+    }
 
-	interface Session {
-		user: User//& DefaultSession["user"]
-		expires: string
-	}
+    interface Session {
+        user: User
+        expires: string
+    }
 }
 
 declare module "@auth/core/jwt" {
-	interface JWT {
-		id: string
-		email: string
-		name: string
-		image?: string
-	}
-}
-
-declare module "@auth/core/adapters" {
-	interface AdapterUser {
-
-	}
+    interface JWT {
+        id: string
+        email: string
+        name: string
+        image?: string
+    }
 }
 
 export {}

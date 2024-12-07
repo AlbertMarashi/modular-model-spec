@@ -1,12 +1,24 @@
 import { GITHUB_ID, GITHUB_SECRET, AUTH_SECRET } from "$env/static/private"
+import GitHub from "@auth/core/providers/github"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Credentials from "@auth/core/providers/credentials"
-import { surrealdb_admin } from "./surrealdb_admin"
-import GitHub from "@auth/core/providers/github"
+import {
+    CreateProviderUserQuery,
+    CreateUserAccountQuery, GetUserFromEmailQuery, GetUserFromProviderQuery, UpdateUserEmailQuery,
+    UpdateUserQuery
+} from "$lib/queries"
+import { get_surrealdb_admin } from "$lib/stores/surrealdb_admin"
 
-export const { handle, signIn, signOut } = SvelteKitAuth({
+
+
+export const {
+    handle, signIn, signOut
+} = SvelteKitAuth({
     callbacks: {
-        async signIn({ user, account }) {
+        async signIn({
+            user, account
+        }) {
+            const sdb = await get_surrealdb_admin()
             // If we're signing into a non-credentials provider, we need to ensure the account exists in the database
             // if not, we will create the account and user
             if (user && account && account.provider !== "credentials") {
@@ -21,65 +33,53 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
                 // A user might exist in the database with the same email address, but not have an account with the provider
                 // we first need to check if the user with the email address exists
-                const [[existing_user]] = await surrealdb_admin.query<[({ id: string } | null)[]]>(
-                    "SELECT id FROM user WHERE email = $email LIMIT 1",
-                { user: user.email }
+                const [[existing_user]] = await sdb.typed(
+                    GetUserFromEmailQuery,
+                    { email: user.email! }
                 )
 
                 // Check if the account exists
-                const [[existing_account]] = await surrealdb_admin.query<[({ id: string, user: string } | null)[]]>(
-                    "SELECT id, user FROM account WHERE provider_id = $provider_id AND provider = $provider LIMIT 1",
-                {
-                    provider_id: account.providerAccountId,
-                    provider: account.provider,
-                }
-                )
+                const [[existing_account]] = await sdb.typed(
+                    GetUserFromProviderQuery,
+                    {
+                        provider_id: account.providerAccountId,
+                        provider: account.provider,
+                    })
 
-                if (existing_account && !existing_user) {
+                if (existing_account && !existing_user && user.email) {
                     // If the account exists, but the user does not, that means we need to update the user's email address
-                    await surrealdb_admin.query(
-                        "UPDATE user SET email = $email WHERE id = $id",
-                        { email: user.email, id: existing_account.user }
+                    await sdb.typed(
+                        UpdateUserEmailQuery,
+                        {
+                            email: user.email,
+                            user_id: existing_account.user
+                        }
                     )
                 } else if (existing_user && !existing_account) {
                     // If the user exists, but the account does not, that means we need to create the account
                     // and link it to the user
-                    await surrealdb_admin.query(
-                        `
-                        CREATE ONLY account CONTENT {
-                            user: $user_id,
-                            provider_id: $provider_id,
-                            provider: $provider,
-                        }
-                        `,
+                    await sdb.typed(
+                        CreateUserAccountQuery,
                         {
-                            user: existing_user.id,
+                            user_id: existing_user.id,
                             provider_id: account.providerAccountId,
                             provider: account.provider,
                         }
                     )
                 } else if (!existing_user && !existing_account) {
                     // If the user does not exist, we need to create the user and the account
-                    const [new_user] = await surrealdb_admin.query<[{ id: string }]>(
-                        `
-                        CREATE ONLY user CONTENT $user RETURN id
-                        `,
+                    const [new_user] = await sdb.typed(
+                        CreateProviderUserQuery,
                         {
                             user: {
-                                name: user.name,
-                                email: user.email,
-                                image: user.image,
+                                name: user.name!,
+                                email: user.email!,
+                                image: user.image ?? undefined,
                             }
                         })
 
-                    await surrealdb_admin.query(
-                        `
-                        CREATE ONLY account CONTENT {
-                            user: $user_id,
-                            provider_id: $provider_id,
-                            provider: $provider,
-                        }
-                        `,
+                    await sdb.typed(
+                        CreateUserAccountQuery,
                         {
                             user_id: new_user.id,
                             provider_id: account.providerAccountId,
@@ -88,18 +88,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                     )
                 } else if (existing_user && existing_account) {
                     // If both the user and the account exist, we need to update the user's settings
-                    await surrealdb_admin.query(
-                        `
-                        UPDATE $user SET
-                            name = $name,
-                            email = $email,
-                            image = $image
-                        `,
+                    await sdb.typed(
+                        UpdateUserQuery,
                         {
                             user: existing_user.id,
-                            name: user.name,
-                            email: user.email,
-                            image: user.image,
+                            name: user.name ?? undefined,
+                            email: user.email!,
+                            image: user.image ?? undefined,
                         }
                     )
                 }
@@ -107,27 +102,28 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
             return true
         },
-        async jwt({ token, user, account, profile }) {
+        async jwt({
+            token, user, account, profile
+        }) {
             // if there is a profile, that means the user is signing in
             // through a provider, so we must retrieve the user's information
             // via it's account through the sub field
             if(profile && account) {
-                const surreal = await surrealdb_admin
-
-                const [[user_id]] = await surreal.query<[string[]]>(
-                    "SELECT VALUE user.id FROM account WHERE provider_id = $id AND provider = $provider LIMIT 1",
+                const sdb = await get_surrealdb_admin()
+                const [[account_result]] = await sdb.typed(
+                    GetUserFromProviderQuery,
                     {
-                        id: account.providerAccountId,
+                        provider_id: account.providerAccountId,
                         provider: account.provider,
                     }
                 )
-
-                user.id = user_id
+                if (!user) throw new Error("User not found")
+                user.id = account_result.user.id
                 user.provider = account.provider
             }
             if(user) {
                 token = {
-                    id: user.id as string,
+                    id: user.id!,
                     email: user.email as string,
                     name: user.name as string,
                     image: user.image as string | undefined,
@@ -137,10 +133,12 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
             return token
         },
-        async session({ session, token }) {
+        async session({
+            session, token
+        }) {
             return {
                 user: {
-                    id: token.id as string,
+                    id: token.id,
                     name: token.name as string,
                     email: token.email as string,
                     image: session.user.image as string | undefined,
@@ -152,27 +150,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     },
     providers: [
         GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
-        Credentials({
-            async authorize(credentials) {
-                const surreal = await surrealdb_admin
-
-                const res = await surreal.query<[{ id: string, name: string, email: string }[]]>(
-                    "SELECT * FROM user WHERE email = $email AND password AND crypto::bcrypt::compare(password, $password) LIMIT 1",
-                    {
-                        email: credentials.email,
-                        password: credentials.password,
-                    })
-
-                const user = res?.[0]?.[0]
-                if (!user) return null
-
-                return {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                }
-            },
-        })
     ],
     secret: AUTH_SECRET,
     trustHost: true,
@@ -181,4 +158,3 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
         signIn: "/login",
     },
 })
-

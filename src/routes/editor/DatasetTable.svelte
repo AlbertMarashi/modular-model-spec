@@ -1,33 +1,33 @@
 <script lang="ts">
 import Icon from "$lib/display/Icon.svelte"
+import { record_to_string } from "$lib/pojo_surreal";
 import { icons, type Thread } from "./editor_types"
 import ChatQuestion from "svelte-material-icons/ChatQuestion.svelte"
 
+let {
+    records = $bindable(),
+    selected_record = $bindable()
+}: {
+    records: Array<Thread>
+    selected_record: string | null
+} = $props()
 
-export let records: Array<Thread>
-export let selected_record: Thread | null = null
-
-function keypress(e: KeyboardEvent, record: Thread) {
-    if (e.key === "Enter") {
-        selected_record = record
-    }
-}
 </script>
 <grid-table>
     <header-cell>ID</header-cell>
     <header-cell>Messages</header-cell>
     {#each records as record}
         <thread-row
-            class:selected={ record === selected_record }
+            class:selected={ record.id.id === selected_record }
             role="row"
             tabindex="0"
-            on:focus={ () => selected_record = record }
-            on:keypress={ (e: KeyboardEvent) => keypress(e, record) }
-            on:click={ () => selected_record = record }>
+            onfocus={ () => selected_record = record.id.id }
+            onkeypress={ (e: KeyboardEvent) => { if (e.key === "Enter") selected_record = record.id.id } }
+            onclick={ () => selected_record = record.id.id }>
             <thread-id
                 role="cell"
                 tabindex="0">
-                { record.id }
+                { record_to_string(record.id) }
             </thread-id>
             <messages>
                 {#each record.messages as message, i}
@@ -67,6 +67,7 @@ grid-table {
     display: grid;
     border: 1px solid rgba(var(--foreground-rgb), 0.1);
     border-radius: 8px;
+    min-width: 0;
     overflow: hidden;
     grid-template-columns: max-content 1fr;
     width: 100%;
@@ -115,6 +116,7 @@ thread-id {
 messages {
     display: flex;
     gap: 4px;
+    overflow-x: hidden;
     font-family: "Fira Code", monospace;
     font-weight: bold;
     font-size: 12px;
@@ -122,6 +124,7 @@ messages {
     align-items: center;
     & message {
         display: flex;
+        text-wrap: nowrap;
         align-items: center;
         gap: 4px;
         padding: 4px;

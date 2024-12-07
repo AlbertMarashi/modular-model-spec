@@ -1,21 +1,28 @@
 <script lang="ts">
 import PageHead from "$lib/PageHead.svelte"
 import Button from "$lib/controls/Button.svelte";
+import { safe_db } from "$lib/stores/database";
 import DatasetTable from "./DatasetTable.svelte"
 import MessageEditor from "./MessageEditor.svelte"
 import type { Thread } from "./editor_types"
 import Plus from "svelte-material-icons/Plus.svelte"
 
-let { data = $bindable() } = $props()
+let { data } = $props()
 
 let records = $state(data.records)
-let selected_record = $state<Thread | null>(null)
+let selected_record: string | null = $state(null)
+let record: Thread | null = $state(null)
 
-// $: if(selected_record) dataset = dataset
+$effect(() => {
+    if (selected_record) record = records.find(r => r.id.id === selected_record) || null
+})
+
+
 
 async function add_record() {
-    let [thread] = await data.db.query<[Thread]>(`
-        CREATE ONLY thread SET
+    const db = await safe_db()
+    let [[thread]] = await db.query<[[Thread]]>(`
+        CREATE thread SET
             allowed_formats = $allowed_formats,
             messages = $messages
     `, {
@@ -44,7 +51,7 @@ async function add_record() {
     })
 
     records.push(thread)
-    selected_record = thread
+    selected_record = thread.id.id
 }
 
 </script>
@@ -62,8 +69,8 @@ async function add_record() {
             bind:records
             bind:selected_record/>
     </table-wrapper>
-    {#if selected_record}
-        <MessageEditor bind:selected_record/>
+    {#if record}
+        <MessageEditor bind:record/>
     {/if}
 </page>
 
@@ -73,8 +80,9 @@ async function add_record() {
 page {
     display: flex;
     flex-direction: row;
-    height: 100%;
-    width: 100%;
+    flex: 1;
+    /* height: 100%;
+    width: 100%; */
     overflow-y: auto;
     position: relative;
 }
@@ -84,7 +92,7 @@ table-wrapper {
     flex-direction: column;
     align-items: start;
     padding: 24px;
-    flex: 1.2;
+    flex: 1.2 0 0;
     height: 100%;
     gap: 16px;
 }

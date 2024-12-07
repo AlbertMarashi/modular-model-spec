@@ -1,63 +1,78 @@
 <script lang="ts">
-import ScrollbarRegion from "$lib/ScrollbarRegion.svelte"
 import Label from "$lib/display/Label.svelte"
 import CodeEditor from "./CodeEditor.svelte"
 import EditorThread from "./EditorThread.svelte"
 import type { Thread } from "./editor_types"
 import { thread_to_tokens } from "./editor_types"
 import SingleSelectChipGroup from "$lib/controls/SingleSelectChipGroup.svelte"
+import { safe_db } from "$lib/stores/database";
+import { UpsertThreadQuery } from "$lib/queries";
 
-export let selected_record: Thread
-let pretty = true
 
-let view_type: "editor" | "tokens" | "json" = "editor"
+let {
+    record = $bindable(),
+}: {
+    record: Thread
+} = $props()
+
+let pretty = $state(true)
+let view_type: "editor" | "tokens" | "json" = $state("editor")
+
+$effect(() => { save_record($state.snapshot(record)) })
+
+async function save_record(thread: Thread) {
+    const db = await safe_db()
+
+    await db.typed(UpsertThreadQuery, {
+        thread
+    })
+}
+
 </script>
 
 <editor-container>
-    <ScrollbarRegion>
-        <contents>
-            <horizontal>
-                <Label text="Dataset Example"/>
-                <SingleSelectChipGroup
-                    buttons={[
-                        { left_icon: undefined, label: "Editor", value: "editor" },
-                        { left_icon: undefined, label: "Tokens", value: "tokens" },
-                        { left_icon: undefined, label: "JSON", value: "json" },
-                    ]}
-                    bind:value={ view_type }/>
-            </horizontal>
-        </contents>
-        <contents>
-            {#if view_type === "editor"}
-                <EditorThread bind:record={ selected_record }/>
-            {:else if view_type === "tokens"}
-                <CodeEditor
-                    code={thread_to_tokens(selected_record, pretty)}
-                    editable={false}
-                    language="tokens"/>
-            {:else if view_type === "json"}
-                <CodeEditor
-                    code={JSON.stringify(selected_record, null, 4)}
-                    editable={false}
-                    language="json"/>
-            {/if}
-        </contents>
-        <!-- <contents>
-            <Label text="Training Example"/>
+    <contents>
+        <horizontal>
+            <Label text="Dataset Example"/>
+            <SingleSelectChipGroup
+                buttons={[
+                    { left_icon: undefined, label: "Editor", value: "editor" },
+                    { left_icon: undefined, label: "Tokens", value: "tokens" },
+                    { left_icon: undefined, label: "JSON", value: "json" },
+                ]}
+                bind:value={ view_type }/>
+        </horizontal>
+    </contents>
+    <contents>
+        {#if view_type === "editor"}
+            <EditorThread bind:record={ record }/>
+        {:else if view_type === "tokens"}
             <CodeEditor
-                code={JSON.stringify(selected_record.thread, null, 4)}
-                editable={false}
-                language="json"/>
-            <Label text="Example Training Tokens"/>
-            <format>
-                Pretty? <Toggle bind:value={ pretty }/>
-            </format>
-            <CodeEditor
-                code={thread_to_tokens(selected_record.thread, pretty)}
+                code={thread_to_tokens(record, pretty)}
                 editable={false}
                 language="tokens"/>
-        </contents> -->
-    </ScrollbarRegion>
+        {:else if view_type === "json"}
+            <CodeEditor
+                code={JSON.stringify(record, null, 4)}
+                editable={false}
+                language="json"/>
+        {/if}
+    </contents>
+    <!-- <contents>
+        <Label text="Training Example"/>
+        <CodeEditor
+            code={JSON.stringify(selected_record.thread, null, 4)}
+            editable={false}
+            language="json"/>
+        <Label text="Example Training Tokens"/>
+        <format>
+            Pretty? <Toggle bind:value={ pretty }/>
+        </format>
+        <CodeEditor
+            code={thread_to_tokens(selected_record.thread, pretty)}
+            editable={false}
+            language="tokens"/>
+    </contents> -->
 </editor-container>
 <style>
 editor-container {
@@ -69,11 +84,10 @@ editor-container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    z-index: 10;
     gap: 24px;
-    flex: 1;
+    flex: 1 0 0;
     overflow-y: auto;
-    max-width: 800px;
+    max-width: 750px;
     border-left: 1px solid rgba(var(--foreground-rgb), 0.1);
 }
 

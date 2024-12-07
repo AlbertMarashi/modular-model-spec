@@ -1,0 +1,1 @@
+CREATE ONLY user CONTENT $user RETURN id

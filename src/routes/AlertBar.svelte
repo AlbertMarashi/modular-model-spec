@@ -1,94 +1,78 @@
-<div class="action-container-wrapper">
-    {#each $alerts as alert}
-        <div
-            bind:this={ elements[alert.id] }
-            class="action-bar"
-            class:error={ alert.type === "error" }
-            class:success={ alert.type === "success" }
-            class:warning={ alert.type === "warning" }
-            role="button"
-            tabindex="0"
-            on:keypress={ e => {
-                if (e.key === "Enter") {
-                    remove(alert.id)
-                }
-            } }
-            on:click={ () => remove(alert.id) }>
-            <div class="icon">
-                <svelte:component
-                    this={ icons[alert.type] }
-                    --size="22px"/>
-            </div>
-            <div class="text">
-                { alert.message }
-            </div>
-            <Close --size="22px"/>
-        </div>
-    {/each}
-</div>
 <script lang="ts">
 import Alert from "svelte-material-icons/Alert.svelte"
-import Info from "svelte-material-icons/AlertCircle.svelte"
-import Close from "svelte-material-icons/Close.svelte"
+import Info from "svelte-material-icons/Information.svelte"
 import Check from "svelte-material-icons/CheckCircle.svelte"
-import { onMount, tick, type ComponentType } from "svelte"
-import { browser } from "$app/environment"
-import { page } from "$app/stores"
-import type { Message } from "$lib/stores/alerts"
-
-$: alerts = $page.data.alerts.store
-
-let elements: { [key: symbol]: HTMLDivElement } = {}
+import Icon from "$lib/display/Icon.svelte"
+import type { IconComponent } from "$lib/utils/icon_type"
+import type { Message } from "$lib/stores/global"
+import { global_state } from "$lib/stores/global"
 
 let icons = {
     "info": Info,
     "warning": Alert,
     "error": Alert,
     "success": Check
-} satisfies Record<Message["type"], ComponentType>
+} satisfies Record<Message["type"], IconComponent>
 
-function remove(id: symbol){
-    $alerts = $alerts.filter(val => val.id !== id)
+const INTERVAL_MS = 5000
+
+function remove(index: number){
+    global_state.inner.alerts.splice(index, 1)
+    restartInterval()
+}
+
+function restartInterval() {
+    if (interval) clearInterval(interval)
+    interval = setInterval(intervalFn, INTERVAL_MS)
 }
 
 let interval: ReturnType<typeof setInterval> | null = null
 
 function intervalFn () {
-    $alerts.shift()
-    $alerts = $alerts
-    setBottomHeights()
+    console.count("shifting")
+    global_state.inner.alerts.shift()
 }
 
-$: {
-    if(browser){
-        if($alerts.length === 0 && interval){
-            clearInterval(interval)
-            interval = null
-        } else if($alerts.length !== 0) {
-            setBottomHeights()
-            if(interval == null) interval = setInterval(intervalFn, 5000)
-        }
+$effect(() => {
+    if (global_state.inner.alerts.length === 0) {
+        if (interval) clearInterval(interval)
+        interval = null
+    } else {
+        restartInterval()
     }
-}
-
-onMount(setBottomHeights)
-
-async function setBottomHeights () {
-    await tick()
-    let elms = $alerts.map((message: Message) => elements[message.id])
-    let heights = 0
-    let margin = 10
-
-    for(let i in elms) {
-        let el = elms[i]
-        let elHeight = el.offsetHeight
-        heights += margin
-        el.style.bottom = heights + "px"
-        heights += elHeight
-    }
-}
+})
 
 </script>
+<div class="action-container-wrapper">
+    {#each global_state.inner.alerts as alert, i}
+        <div
+            class="action-bar"
+            class:error={ alert.type === "error" }
+            class:info={ alert.type === "info" }
+            class:success={ alert.type === "success" }
+            class:warning={ alert.type === "warning" }
+            onclick={() => remove(i)}
+            onkeydown={e => {
+                if (e.key === "Enter") {
+                    remove(i)
+                }
+            }}
+            role="button"
+            tabindex="0">
+            <Icon icon={icons[alert.type]}/>
+            <alert-data>
+                {#if alert.code}
+                    <code>
+                        { alert.code }
+                    </code>
+                {/if}
+                <div class="text">
+                    { alert.message }
+                </div>
+            </alert-data>
+        </div>
+    {/each}
+</div>
 <style>
 .action-container-wrapper {
     position: fixed;
@@ -97,42 +81,45 @@ async function setBottomHeights () {
     right: 0;
     height: 0;
     display: flex;
-    align-items: flex-end;
-    z-index: 250;
-    justify-content: center;
+    flex-direction: column-reverse;
+    z-index: 150;
+    align-items: center;
+    justify-content: end;
+    gap: 16px;
+    pointer-events: none;
 
     & .action-bar {
+        pointer-events: all;
         cursor: pointer;
-        background: color-mix(in srgb, rgba(var(--color-rgb)) 20%, var(--background));
-        color: color-mix(in srgb, rgba(var(--color-rgb)) 80%, var(--foreground));
-        position: fixed;
+        background: var(--background);
         width: 100%;
         max-width: 500px;
-        padding: 12px;
+        padding: 8px;
         font-weight: 500;
-        /* box-shadow: 0 0 5px color-mix(in srgb, black, 10%); */
-        border: 1px solid rgba(var(--color-rgb), 0.1);
+        box-shadow: 0 0 5px color-mix(in srgb, black, 10%);
         border-radius: 5px;
         z-index: 251;
-        transition: 0.2s ease-in-out;
+        color: rgba(var(--foreground-rgb), 1);
+        --color: rgba(var(--color-rgb), 1);
         display: grid;
-        grid-template-columns: min-content 1fr min-content;
+        grid-template-columns: min-content 1fr;
         align-items: center;
+        border: 2px solid rgba(var(--color-rgb), 1);
+        gap: 8px;
         &.warning {
-            --color-rgb: var(--orange-rgb);
+            --color-rgb: var(--yellow-rgb)
         }
 
         &.error {
-            --color-rgb: var(--red-rgb);
+            --color-rgb: var(--red-rgb)
         }
 
         &.success {
-            --color-rgb: var(--brand-rgb);
+            --color-rgb: var(--green-rgb)
         }
 
-        & .icon {
-            padding-right: 8px;
-            display: inline-flex;
+        &.info {
+            --color-rgb: var(--blue-rgb)
         }
     }
 }

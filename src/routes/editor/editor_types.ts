@@ -3,9 +3,10 @@ import CodeBraces from "svelte-material-icons/CodeBraces.svelte"
 import Web from "svelte-material-icons/Web.svelte"
 import HammerScrewdriver from "svelte-material-icons/HammerScrewdriver.svelte"
 import AccountCircle from "svelte-material-icons/AccountCircle.svelte"
+import type { RecordId } from "$lib/pojo_surreal"
 
 export type Thread = {
-    id: string
+    id: RecordId<"thread">
     allowed_formats: Array<AllowedAssistantFormat>
     messages: Array<Message | null>
     tags: Array<string>
