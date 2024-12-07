@@ -1,7 +1,6 @@
 import { GITHUB_ID, GITHUB_SECRET, AUTH_SECRET } from "$env/static/private"
 import GitHub from "@auth/core/providers/github"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import Credentials from "@auth/core/providers/credentials"
 import {
     CreateProviderUserQuery,
     CreateUserAccountQuery, GetUserFromEmailQuery, GetUserFromProviderQuery, UpdateUserEmailQuery,
@@ -155,6 +154,6 @@ export const {
     trustHost: true,
     pages: {
         error: "/error",
-        signIn: "/login",
+        // signIn: "/login",
     },
 })

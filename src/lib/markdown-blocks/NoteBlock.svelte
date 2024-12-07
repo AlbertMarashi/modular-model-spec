@@ -5,14 +5,14 @@ import BlocksArray from "./BlocksArray.svelte"
 
 export let block: ContainerDirective
 
-enum Mapping {
-    warning = "warning",
-    error = "error",
-    note = "note",
-    tip = "success",
+const mapping: Record<string, string> = {
+    warning: "warning",
+    error: "error",
+    note: "note",
+    tip: "success",
 }
 
-$: type = Mapping[block.name as keyof typeof Mapping]
+$: type = mapping[block.name]
 </script>
 <Callout type={type}>
     <BlocksArray blocks={block.children}/>
