@@ -33,23 +33,23 @@ bun run build
 # echo "Running linter..."
 # bun lint
 
-# echo "All checks passed. Proceeding with database operations..."
+echo "All checks passed. Proceeding with database operations..."
 
-# echo "Importing schema..."
-# surreal import \
-#     --endpoint $PUBLIC_SURREAL_HOST \
-#     -u $SURREAL_USER \
-#     -p $SURREAL_PASS \
-#     --ns $PUBLIC_SURREAL_NAMESPACE \
-#     --db modular_model_spec \
-#     schema.surql
+echo "Importing schema..."
+surreal import \
+    --endpoint $PUBLIC_SURREAL_HOST \
+    -u $SURREAL_USER \
+    -p $SURREAL_PASS \
+    --ns $PUBLIC_SURREAL_NAMESPACE \
+    --db modular_model_spec \
+    schema.surql
 
-# echo "Defining token..."
-# echo "DEFINE ACCESS OVERWRITE users ON DATABASE TYPE RECORD WITH JWT ALGORITHM HS256 KEY '$AUTH_SECRET' DURATION FOR TOKEN 1w;" | surreal sql \
-#     --endpoint $PUBLIC_SURREAL_HOST \
-#     -u $SURREAL_USER \
-#     -p $SURREAL_PASS \
-#     --ns $PUBLIC_SURREAL_NAMESPACE \
-#     --db modular_model_spec
+echo "Defining token..."
+echo "DEFINE ACCESS OVERWRITE users ON DATABASE TYPE RECORD WITH JWT ALGORITHM HS256 KEY '$AUTH_SECRET' DURATION FOR TOKEN 1w;" | surreal sql \
+    --endpoint $PUBLIC_SURREAL_HOST \
+    -u $SURREAL_USER \
+    -p $SURREAL_PASS \
+    --ns $PUBLIC_SURREAL_NAMESPACE \
+    --db modular_model_spec
 
 echo "Deployment script completed successfully."
