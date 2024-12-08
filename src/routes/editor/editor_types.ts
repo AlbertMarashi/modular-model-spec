@@ -75,22 +75,38 @@ export type Context = {
     content: string
 }
 
+const ROLE = "<|role|>"
+const FORMAT = "<|format|>"
+const CONTENT = "<|content|>"
+const END_TURN = "<|end_turn|>"
+
 export function thread_to_tokens(thread: Thread, pretty: boolean): string {
     let tokens = ""
 
     for (const message of thread.messages) {
         if (message === null) continue
-        if (message.role === "assistant") {
-            tokens += assistant_message_to_tokens(message, pretty)
-        } else if (message.role === "developer") {
-            tokens += developer_message_to_tokens(message, pretty)
-        } else if (message.role === "platform") {
-            tokens += platform_message_to_tokens(message, pretty)
-        } else if (message.role === "context") {
-            tokens += context_message_to_tokens(message, pretty)
-        } else if (message.role === "user") {
-            tokens += user_message_to_tokens(message, pretty)
-        }
+        tokens += ROLE
+        tokens += message.role
+        if (message.role === "assistant") tokens += FORMAT + message.format
+
+        tokens += CONTENT + "\n"
+        // if (message.role === "assistant") {
+        //     tokens += assistant_message_to_tokens(message, pretty)
+        // } else if (message.role === "developer") {
+        //     tokens += developer_message_to_tokens(message, pretty)
+        // } else if (message.role === "platform") {
+        //     tokens += platform_message_to_tokens(message, pretty)
+        // } else if (message.role === "context") {
+        //     tokens += context_message_to_tokens(message, pretty)
+        // } else if (message.role === "user") {
+        //     tokens += user_message_to_tokens(message, pretty)
+        // }
+
+        tokens += message.content
+
+        if (message.role === "assistant" && message.end_turn) tokens += END_TURN
+
+        tokens += "\n"
     }
 
     return tokens.trimEnd()
