@@ -86,10 +86,11 @@ export function thread_to_tokens(thread: Thread, pretty: boolean): string {
     for (const message of thread.messages) {
         if (message === null) continue
         tokens += ROLE
-        tokens += message.role
+        tokens += message.role === "assistant" ? "model" : message.role
         if (message.role === "assistant") tokens += FORMAT + message.format
+        if (message.role === "context") tokens += message.name
 
-        tokens += CONTENT + "\n"
+        tokens += CONTENT + (pretty ? "\n" : "")
         // if (message.role === "assistant") {
         //     tokens += assistant_message_to_tokens(message, pretty)
         // } else if (message.role === "developer") {
@@ -106,7 +107,7 @@ export function thread_to_tokens(thread: Thread, pretty: boolean): string {
 
         if (message.role === "assistant" && message.end_turn) tokens += END_TURN
 
-        tokens += "\n"
+        if (pretty) tokens += "\n"
     }
 
     return tokens.trimEnd()
