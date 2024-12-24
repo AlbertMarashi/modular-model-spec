@@ -2,7 +2,6 @@
     lang="ts">
 import MarkdownRenderer from "$lib/MarkdownRenderer.svelte"
 import PageHead from "$lib/PageHead.svelte"
-import ScrollbarRegion from "$lib/ScrollbarRegion.svelte"
 import TableOfContents from "$lib/TableOfContents.svelte"
 
 export let data
@@ -16,21 +15,17 @@ export let content: HTMLElement
 <page>
     <toc>
         <toc-contents>
-            <ScrollbarRegion>
-                <h2>Table of Contents</h2>
-                <TableOfContents
-                    content={content}
-                    markdown={data.spec}/>
-            </ScrollbarRegion>
+            <h2>Table of Contents</h2>
+            <TableOfContents
+                content={content}
+                markdown={data.spec}/>
         </toc-contents>
     </toc>
-    <ScrollbarRegion>
-        <spec
-            bind:this={ content }>
-            <MarkdownRenderer
-                markdown={data.spec}/>
-        </spec>
-    </ScrollbarRegion>
+    <spec
+        bind:this={ content }>
+        <MarkdownRenderer
+            markdown={data.spec}/>
+    </spec>
 </page>
 <style>
 spec {
@@ -38,18 +33,19 @@ spec {
     flex-direction: column;
     max-height: 100%;
     padding: 40px;
-    overflow: auto;
+    overflow-y: auto;
+    scrollbar-color: rgba(var(--foreground-rgb), 0.1) rgba(var(--foreground-rgb), 0.01);
     /* flex: 1; */
 }
 
 toc {
-    /* border-right: 1px solid rgba(var(--foreground-rgb), 0.1); */
     max-height: 100%;
-    overflow: auto;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 350px;
+    
     & h2 {
         padding: 16px;
         font-size: 1.2em;
@@ -60,9 +56,8 @@ toc {
 
     & toc-contents {
         overflow: auto;
+        scrollbar-color: rgba(var(--foreground-rgb), 0.1) rgba(var(--foreground-rgb), 0.0);
         max-height: 100%;
-        --scrollbar-thumb: rgba(var(--foreground-rgb), 0.1);
-        --scrollbar-background: rgba(var(--foreground-rgb), 0.0);
         flex: 1;
     }
 }
