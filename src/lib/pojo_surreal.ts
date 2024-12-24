@@ -1,13 +1,14 @@
 import {
     RecordId as BaseRecordId, Surreal as BaseSurreal, type Prettify, type QueryParameters, type RecordIdValue
 } from "surrealdb"
+import { gen_surreal_id_string } from "./utils/surreal_ids"
 
 export interface RecordId<Tb extends string = string> {
     tb: Tb
     id: string
 }
 
-export function new_record<Tb extends string>(tb: Tb, id: string): RecordId<Tb> {
+export function new_record<Tb extends string>(tb: Tb, id: string = gen_surreal_id_string()): RecordId<Tb> {
     return {
         tb,
         id
@@ -44,7 +45,7 @@ export class Surreal extends BaseSurreal {
         if (value instanceof BaseRecordId) return value
         if (Array.isArray(value)) return value.map(v => this.convert_to_record_id_class(v))
         if (value instanceof Date) return value
-        if (typeof value === "object" && value !== null ) {
+        if (typeof value === "object" && value !== null) {
             if (is_record_id(value)) return new BaseRecordId(value.tb, this.convert_to_record_id(value.id) as RecordIdValue)
             const obj: Record<string, unknown> = {}
             for (const [key, val] of Object.entries(value)) {
