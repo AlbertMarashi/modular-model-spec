@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { ComponentType } from "svelte"
 import Icon from "./Icon.svelte"
 
@@ -9,11 +10,14 @@ export let level: 1 | 2 | 3 | 4 | 5 | 6 = 1
 </script>
 
 
-<heading class="level-{level}">
+<heading
+    class="level-{level}">
     {#if left_icon}
-        <Icon icon={left_icon}/>
+        <Icon
+            icon={left_icon}/>
     {/if}
-    <svelte:element this={ "h" + level }>
+    <svelte:element
+        this={ "h" + level }>
         { text ?? "" }
         <slot/>
     </svelte:element>

@@ -1,113 +1,117 @@
-<script lang="ts">
-    import Label from "$lib/display/Label.svelte";
+<script
+    lang="ts">
+import Label from "$lib/display/Label.svelte"
 
-    let {
-        value = $bindable(0),
-        min = 0,
-        max = 1,
-        step = 0.1,
-        label = undefined,
-    }: {
-        value: number;
-        min?: number;
-        max?: number;
-        step?: number;
-        label?: string;
-    } = $props();
+let {
+    value = $bindable(0),
+    min = 0,
+    max = 1,
+    step = 0.1,
+    label = undefined,
+}: {
+    value: number;
+    min?: number;
+    max?: number;
+    step?: number;
+    label?: string;
+} = $props()
 
-    // Round value to nearest step
-    function roundToStep(val: number): number {
-        if (!step) return val;
-        return Math.round(val / step) * step;
+// Round value to nearest step
+function roundToStep(val: number): number {
+    if (!step) return val
+    return Math.round(val / step) * step
+}
+
+// Format display value based on step size
+function formatValue(val: number): string {
+    if (!step) return val.toString()
+
+    // Count decimal places in step
+    const decimals = step.toString().split(".")[1]?.length || 0
+    return val.toFixed(decimals)
+}
+
+let dragging = $state(false)
+let startX = $state(0)
+let startValue = $state(0)
+let track = $state(null as HTMLElement | null)
+
+function calculateValueFromPosition(clientX: number) {
+    if (!track) return value
+
+    const rect = track.getBoundingClientRect()
+    const position = clientX - rect.left
+    const percentage = position / rect.width
+    let newValue = min + (max - min) * percentage
+
+    // Clamp value
+    newValue = Math.max(min, Math.min(max, newValue))
+
+    // Round to nearest step
+    return roundToStep(newValue)
+}
+
+function startDrag(e: MouseEvent) {
+    if (!track) return
+
+    dragging = true
+    startX = e.clientX
+    startValue = value
+
+    // If clicking on track (not thumb), immediately update value
+    if (e.target === track) {
+        value = calculateValueFromPosition(e.clientX)
+        startValue = value
     }
+}
 
-    // Format display value based on step size
-    function formatValue(val: number): string {
-        if (!step) return val.toString();
+function mousemove(e: MouseEvent) {
+    if (!dragging || !track) return
 
-        // Count decimal places in step
-        const decimals = step.toString().split(".")[1]?.length || 0;
-        return val.toFixed(decimals);
-    }
+    value = calculateValueFromPosition(e.clientX)
+    e.preventDefault() // Prevent text selection while dragging
+}
 
-    let dragging = $state(false);
-    let startX = $state(0);
-    let startValue = $state(0);
-    let track = $state(null as HTMLElement | null);
-
-    function calculateValueFromPosition(clientX: number) {
-        if (!track) return value;
-
-        const rect = track.getBoundingClientRect();
-        const position = clientX - rect.left;
-        const percentage = position / rect.width;
-        let newValue = min + (max - min) * percentage;
-
-        // Clamp value
-        newValue = Math.max(min, Math.min(max, newValue));
-
-        // Round to nearest step
-        return roundToStep(newValue);
-    }
-
-    function startDrag(e: MouseEvent) {
-        if (!track) return;
-
-        dragging = true;
-        startX = e.clientX;
-        startValue = value;
-
-        // If clicking on track (not thumb), immediately update value
-        if (e.target === track) {
-            value = calculateValueFromPosition(e.clientX);
-            startValue = value;
-        }
-    }
-
-    function mousemove(e: MouseEvent) {
-        if (!dragging || !track) return;
-
-        value = calculateValueFromPosition(e.clientX);
-        e.preventDefault(); // Prevent text selection while dragging
-    }
-
-    // Calculate thumb position as percentage
-    let thumbPosition = $derived(((value - min) / (max - min)) * 100);
+// Calculate thumb position as percentage
+let thumbPosition = $derived(((value - min) / (max - min)) * 100)
 </script>
 
 <svelte:window
+    onmouseleave={() => (dragging = false)}
     onmousemove={mousemove}
     onmouseup={() => (dragging = false)}
-    onmouseleave={() => (dragging = false)}
 />
 
 <control-item>
     <header>
         {#if label}
-            <Label text={label} />
+            <Label
+                text={label} />
         {/if}
-        <value-display>{formatValue(value)}</value-display>
+        <value-display>{ formatValue(value) }</value-display>
     </header>
     <slider-container
-        role="slider"
-        aria-valuenow={value}
-        aria-valuemin={min}
         aria-valuemax={max}
-        tabindex="-1"
+        aria-valuemin={min}
+        aria-valuenow={value}
         onmousedown={startDrag}
+        role="slider"
+        tabindex="-1"
     >
-        <track-element bind:this={track} style:--width={thumbPosition + "%"}>
+        <track-element
+            bind:this={ track }
+            style:--width={ thumbPosition + "%" }>
             <thumb
+                style:left={ thumbPosition + "%" }
+                aria-valuemax={max}
+                aria-valuemin={min}
+                aria-valuenow={value}
+                onmousedown={(e: MouseEvent) => {
+                    e.stopPropagation()
+                    startDrag(e)
+                }}
                 role="slider"
                 tabindex="0"
-                aria-valuenow={value}
-                aria-valuemin={min}
-                aria-valuemax={max}
-                style:left={thumbPosition + "%"}
-                onmousedown={(e: MouseEvent) => {
-                    e.stopPropagation();
-                    startDrag(e);
-                }}
             ></thumb>
         </track-element>
     </slider-container>

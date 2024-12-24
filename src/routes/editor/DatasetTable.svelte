@@ -1,6 +1,7 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
-import { record_to_string } from "$lib/pojo_surreal";
+import { record_to_string } from "$lib/pojo_surreal"
 import { icons, type Thread } from "./editor_types"
 import ChatQuestion from "svelte-material-icons/ChatQuestion.svelte"
 
@@ -19,11 +20,11 @@ let {
     {#each records as record}
         <thread-row
             class:selected={ record.id.id === selected_record }
+            onclick={() => selected_record = record.id.id}
+            onfocus={() => selected_record = record.id.id}
+            onkeypress={(e: KeyboardEvent) => { if (e.key === "Enter") selected_record = record.id.id }}
             role="row"
-            tabindex="0"
-            onfocus={ () => selected_record = record.id.id }
-            onkeypress={ (e: KeyboardEvent) => { if (e.key === "Enter") selected_record = record.id.id } }
-            onclick={ () => selected_record = record.id.id }>
+            tabindex="0">
             <thread-id
                 role="cell"
                 tabindex="0">
@@ -32,8 +33,10 @@ let {
             <messages>
                 {#each record.messages as message, i}
                     {#if message === null}
-                        <message class="unknown">
-                            <Icon icon={ChatQuestion}/>
+                        <message
+                            class="unknown">
+                            <Icon
+                                icon={ChatQuestion}/>
                         </message>
                     {:else}
                         <message
@@ -42,7 +45,8 @@ let {
                             class:developer={ message.role === "developer" }
                             class:platform={ message.role === "platform" }
                             class:user={ message.role === "user" }>
-                            <Icon icon={icons[message.role]}/>
+                            <Icon
+                                icon={icons[message.role]}/>
                             {#if message.role === "assistant"}
                                 <format>
                                     -&gt;&gt;

@@ -4,7 +4,7 @@ import type { Thread } from "./editor_types"
 
 export async function load({  }) {
     const db = await safe_db()
-    let [records] = await db.query<[Thread[]]>(`
+    const [records] = await db.query<[Thread[]]>(`
         SELECT
             *
         FROM thread

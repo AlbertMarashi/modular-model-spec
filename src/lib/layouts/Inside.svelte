@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { getContext, onMount } from "svelte"
     
 const nodes = getContext("clickoutside") as Node[]
@@ -12,7 +13,8 @@ onMount(() => {
     nodes.push(div as Node)
 })
 </script>
-<div bind:this={ div }>
+<div
+    bind:this={ div }>
     <slot/>
 </div>
 <style>

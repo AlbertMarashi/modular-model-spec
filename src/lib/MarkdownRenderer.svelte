@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import BlocksArray from "$lib/markdown-blocks/BlocksArray.svelte"
 import { generate_ast } from "$lib/utils/ast"
 

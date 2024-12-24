@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { Table } from "mdast"
 import PhrasingContentArray from "./PhrasingContentArray.svelte"
 
@@ -14,7 +15,8 @@ $: columns = block.children?.[0].children.length ?? 0
             <div
                 class="grid-cell"
                 class:header={ i === 0 }>
-                <PhrasingContentArray children={cell.children}/>
+                <PhrasingContentArray
+                    children={cell.children}/>
             </div>
         {/each}
     {/each}

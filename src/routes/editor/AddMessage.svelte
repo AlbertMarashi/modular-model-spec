@@ -1,5 +1,6 @@
 
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import Add from "svelte-material-icons/Plus.svelte"
 
@@ -8,8 +9,10 @@ export let position: "top" | "bottom"
 <wrapper
     class:bottom={ position === "bottom" }
     class:top={ position === "top" }>
-    <button on:click|stopPropagation>
-        <Icon icon={Add}/>
+    <button
+        on:click|stopPropagation>
+        <Icon
+            icon={Add}/>
     </button>
 </wrapper>
 

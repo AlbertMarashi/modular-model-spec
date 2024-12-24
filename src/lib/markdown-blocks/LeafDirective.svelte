@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 // import type { LeafDirective } from "mdast-util-directive"
 import Unsupported from "./Unsupported.svelte"
 

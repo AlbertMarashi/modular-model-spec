@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Callout from "$lib/display/Callout.svelte"
 import type { ContainerDirective } from "mdast-util-directive"
 import BlocksArray from "./BlocksArray.svelte"
@@ -14,6 +15,8 @@ const mapping: Record<string, string> = {
 
 $: type = mapping[block.name]
 </script>
-<Callout type={type}>
-    <BlocksArray blocks={block.children}/>
+<Callout
+    type={type}>
+    <BlocksArray
+        blocks={block.children}/>
 </Callout>

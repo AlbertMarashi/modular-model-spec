@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import hljs from "highlight.js"
 import "$lib/markdown-blocks/code-theme.css"
 
@@ -113,28 +114,39 @@ function handle_keydown(event: KeyboardEvent) {
 </script>
 <pre
     bind:this={ pre }
-    class:editable>
-    <code bind:this={ code_el }>
-        <div class="line">
-            <div class="number small">{ Array(digits).fill(" ").join("") }</div>
+    class:editable={ editable }>
+    <code
+bind:this={ code_el }>
+        <div
+class="line">
+            <div
+class="number small">{ Array(digits).fill(" ").join("") }</div>
         </div>
         {#each lines as line, i}
-            <div class="line">
-                <div class="number"><span class="zero">{ numbers[i][0] }</span>{ numbers[i][1] }</div>
+            <div
+class="line">
+                <div
+class="number"><span
+class="zero">{ numbers[i][0] }</span>{ numbers[i][1] }</div>
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                <div class="code">{@html line}</div>
+                <div
+class="code">{@html line}</div>
             </div>
         {/each}
-        <div class="line textarea">
-            <div class="number">{ Array(digits).fill(" ").join("") }</div>
+        <div
+class="line textarea">
+            <div
+class="number">{ Array(digits).fill(" ").join("") }</div>
             <textarea
                 bind:this={ textarea }
+                onkeydown={handle_keydown}
                 spellcheck="false"
-                onkeydown={ handle_keydown }
                 bind:value={ code }></textarea>
         </div>
-        <div class="line">
-            <div class="number small">{ Array(digits).fill(" ").join("") }</div>
+        <div
+class="line">
+            <div
+class="number small">{ Array(digits).fill(" ").join("") }</div>
         </div>
     </code>
 </pre>

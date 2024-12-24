@@ -1,5 +1,5 @@
 
-import type { Parser } from "./parsers";
+import type { Parser } from "./parsers"
 
 export function consume_until(parser: Parser, str: string): string {
     let text = ""

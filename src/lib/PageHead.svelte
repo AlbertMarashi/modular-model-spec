@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { page } from "$app/stores"
 
 export let title: string

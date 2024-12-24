@@ -1,4 +1,5 @@
-<div class="unsupported">
+<div
+    class="unsupported">
     This is an unsupported block type.
 </div>
 <style>

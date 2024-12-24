@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-namespace */
+ 
 import type { AlertsStore } from "$lib/stores/alerts"
 import type { Surreal } from "surrealdb"
 import type { Session } from "@auth/core/types"

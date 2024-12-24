@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import type { ComponentType } from "svelte"
 
@@ -14,8 +15,8 @@ $: tag = href ? "a" : "button" as "a" | "button"
 <svelte:element
     this={ tag }
     class="button"
-    class:disabled
-    class:expand
+    class:disabled={ disabled }
+    class:expand={ expand }
     class:filled={ type === "filled" }
     class:outlined={ type === "outlined" }
     class:tonal={ type === "tonal" }
@@ -26,13 +27,15 @@ $: tag = href ? "a" : "button" as "a" | "button"
     tabindex="0"
     on:click>
     {#if left_icon}
-        <Icon icon={left_icon}/>
+        <Icon
+            icon={left_icon}/>
     {/if}
     {#if label}
         <span>{ label }</span>
     {/if}
     {#if right_icon}
-        <Icon icon={right_icon}/>
+        <Icon
+            icon={right_icon}/>
     {/if}
 </svelte:element>
 <style>

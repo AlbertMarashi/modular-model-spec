@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { createEventDispatcher } from "svelte"
 
 let dispatch = createEventDispatcher<{ close: void }>()
@@ -13,7 +14,8 @@ function handleClickOutside(event: MouseEvent) {
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<screen on:click={ handleClickOutside }>
+<screen
+    on:click={ handleClickOutside }>
     <slot/>
 </screen>
 

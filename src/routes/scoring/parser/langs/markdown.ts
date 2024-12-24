@@ -1,7 +1,7 @@
-import { languages } from "../languages";
-import { Interceptor, type Parser } from "../parsers";
-import { TokenFlag } from "../types";
-import { expect_text, peek_text } from "../utils";
+import { languages } from "../languages"
+import { Interceptor, type Parser } from "../parsers"
+import { TokenFlag } from "../types"
+import { expect_text, peek_text } from "../utils"
 
 // We define a helper class to manage state and buffering
 class MarkdownState {
@@ -10,8 +10,8 @@ class MarkdownState {
 
 export function parse_markdown(parser: Parser) {
     while (parser.peek_i(0) !== null) {
-        const state = new MarkdownState();
-        parse_line(parser, state);
+        const state = new MarkdownState()
+        parse_line(parser, state)
     }
 }
 
@@ -41,16 +41,16 @@ function parse_line(parser: Parser, state: MarkdownState) {
     }
 
     // Not a heading line, parse inline content directly
-    parse_inline_content(parser, state);
-    parser.complete("markdown", state.flags);
+    parse_inline_content(parser, state)
+    parser.complete("markdown", state.flags)
 }
 
 
 function parse_heading(parser: Parser, state: MarkdownState) {
     state.flags |= TokenFlag.heading
 
-    let count = 0;
-    while (parser.peek_i(0) === '#') {
+    let count = 0
+    while (parser.peek_i(0) === "#") {
         parser.next()
         count++
     }
@@ -69,13 +69,13 @@ function parse_heading(parser: Parser, state: MarkdownState) {
 // Inline content: handles emphasis, links, code, etc.
 function parse_inline_content(parser: Parser, state: MarkdownState) {
     while (parser.peek_i(0) !== null) {
-        const ch = parser.peek_i(0);
-        if (ch === null || ch === '\n') return parser.complete("markdown", state.flags)
+        const ch = parser.peek_i(0)
+        if (ch === null || ch === "\n") return parser.complete("markdown", state.flags)
 
         // check for inline formatting
         switch (ch) {
-            case "`": parse_code_fence(parser, state); break;
-            case "*": parse_asterisk(parser, state); break;
+            case "`": parse_code_fence(parser, state); break
+            case "*": parse_asterisk(parser, state); break
             default: {
                 // just text
                 parser.next()
@@ -163,7 +163,7 @@ function parse_code_fence(parser: Parser, state: MarkdownState, from_newline: bo
 
     // count number of opening backticks
     let count = 0
-    while (parser.peek_i(0) === '`') {
+    while (parser.peek_i(0) === "`") {
         parser.next()
         count++
     }
@@ -174,7 +174,7 @@ function parse_code_fence(parser: Parser, state: MarkdownState, from_newline: bo
     let consumed = ""
 
     while (true) {
-        let ch = parser.peek_i(0)
+        const ch = parser.peek_i(0)
 
         if (ch === null) return parser.error("markdown", "unterminated block")
 
@@ -188,7 +188,7 @@ function parse_code_fence(parser: Parser, state: MarkdownState, from_newline: bo
                 if (!expect_text(parser, closing)) {
                     // it's an escaped backtick, so continue
                     parser.next()
-                    continue;
+                    continue
                 };
 
                 // we've found the closing backticks
@@ -212,7 +212,7 @@ function parse_code_fence(parser: Parser, state: MarkdownState, from_newline: bo
             }
             default: {
                 parser.next()
-                continue;
+                continue
             }
         }
     }
@@ -237,5 +237,5 @@ function parse_list_item(parser: Parser, state: MarkdownState) {
 }
 
 function is_digit(ch: string): boolean {
-    return ch >= '0' && ch <= '9';
+    return ch >= "0" && ch <= "9"
 }

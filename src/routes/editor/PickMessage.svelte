@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { Message } from "$lib/types/messages"
 import Icon from "$lib/display/Icon.svelte"
 import Robot from "svelte-material-icons/Robot.svelte"
@@ -21,7 +22,7 @@ let base_messages: Message[] = [
     {
         role: "assistant",
         format: "markdown",
-        content: `This is an assistant message, a type of message that the model responds to.\n\nAssistant messages always define a response format via the \`format\` field, in this case, the \`markdown\` format. The assistant message also defines a \`end_turn\` field, which is a boolean value that indicates whether the assistant has finished responding.`,
+        content: "This is an assistant message, a type of message that the model responds to.\n\nAssistant messages always define a response format via the `format` field, in this case, the `markdown` format. The assistant message also defines a `end_turn` field, which is a boolean value that indicates whether the assistant has finished responding.",
         end_turn: true,
     },
     {
@@ -62,7 +63,8 @@ const icons: Record<typeof base_messages[number]["role"], ComponentType> = {
             <button
                 class="delete"
                 on:click={ () => dispatch("delete") }>
-                <Icon icon={Delete}/>
+                <Icon
+                    icon={Delete}/>
             </button>
         {/if}
     </message-type>
@@ -72,7 +74,8 @@ const icons: Record<typeof base_messages[number]["role"], ComponentType> = {
                 class={option.role}
                 class:selected={ selected === index }
                 on:click={ () => message = option }>
-                <Icon icon={icons[option.role]}/>
+                <Icon
+                    icon={icons[option.role]}/>
                 <span>{ option.role }</span>
             </button>
         {/each}

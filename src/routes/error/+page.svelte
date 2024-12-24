@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Button from "$lib/controls/Button.svelte"
 import ExitToApp from "svelte-material-icons/ExitToApp.svelte"
 import AccountPlus from "svelte-material-icons/AccountPlus.svelte"
@@ -6,13 +7,17 @@ import { page } from "$app/stores"
 import Callout from "$lib/display/Callout.svelte"
 import Heading from "$lib/display/Heading.svelte"
 </script>
-<div class="vertical">
-    <Callout type="error">
-        <Heading level={3}>{ $page.url.searchParams.get("error") ?? "An error occurred" }</Heading>
+<div
+    class="vertical">
+    <Callout
+        type="error">
+        <Heading
+            level={3}>{ $page.url.searchParams.get("error") ?? "An error occurred" }</Heading>
         <p>{ $page.url.searchParams.get("message") ?? "An error occurred" }</p>
     </Callout>
 </div>
-<div class="vertical">
+<div
+    class="vertical">
     <Button
         expand={true}
         href="/create"

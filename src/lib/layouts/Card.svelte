@@ -1,5 +1,6 @@
 
-<script lang="ts">
+<script
+    lang="ts">
 export let max_width: string | undefined = undefined
 </script>
 <div

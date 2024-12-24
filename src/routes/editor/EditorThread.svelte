@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import Forum from "svelte-material-icons/Forum.svelte"
 import EditorMessage from "./EditorMessage.svelte"
@@ -27,31 +28,32 @@ function delete_message(index: number) {
 </script>
 <thread>
     <section-heading>
-        <Icon icon={Forum}/>
+        <Icon
+            icon={Forum}/>
         Thread
     </section-heading>
     <inner>
         <messages>
             <SystemConfig
-                bind:selected
+                bind:selected={ selected }
                 bind:thread={ record }/>
             {#if record.messages.length > 0}
                 {#each record.messages as message, i}
                     {#if message !== null}
                         <EditorMessage
                             index={i}
-                            bind:selected
+                            bind:selected={ selected }
                             bind:formats={ record.allowed_formats }
                             on:insert_above={ () => insert(i) }
                             on:insert_below={ () => insert(i + 1) }
                             on:delete={ () => delete_message(i) }
-                            bind:message/>
+                            bind:message={ message }/>
                     {:else}
                         <PickMessage
                             index={i}
                             on:delete={ () => delete_message(i) }
-                            bind:selected
-                            bind:message/>
+                            bind:selected={ selected }
+                            bind:message={ message }/>
                     {/if}
                 {/each}
             {:else}
@@ -59,7 +61,7 @@ function delete_message(index: number) {
                     deletable={false}
                     index={0}
                     on:delete={ () => delete_message(0) }
-                    bind:selected
+                    bind:selected={ selected }
                     bind:message={ record.messages[0] }/>
             {/if}
         </messages>

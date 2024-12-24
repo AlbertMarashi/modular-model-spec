@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Card from "$lib/layouts/Card.svelte"
 import CardSection from "$lib/layouts/CardSection.svelte"
 import Account from "svelte-material-icons/Account.svelte"
@@ -22,10 +23,13 @@ async function logout() {
 }
 </script>
 {#if opened}
-    <Scrim on:close={ () => opened = false }>
-        <Card max_width="600px">
+    <Scrim
+        on:close={ () => opened = false }>
+        <Card
+            max_width="600px">
             <CardSection>
-                <FlexBox justify="space-between">
+                <FlexBox
+                    justify="space-between">
                     <Heading
                         left_icon={Account}
                         level={2}>Account</Heading>

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { browser } from "$app/environment"
 import { get_plain_text } from "$lib/utils/plain_text"
 import type { Heading } from "mdast"
@@ -21,7 +22,7 @@ $: if(browser && active) {
     bind:this={ toc_heading }
     style:padding-left="{ heading.depth * 10 }px"
     class="toc-section"
-    class:active
+    class:active={ active }
     href="#{id}">
     { plain_text }
 </a>

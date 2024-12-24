@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { MdxJsxFlowElement } from "mdast-util-mdx"
 import Unsupported from "./Unsupported.svelte"
 import Thread from "./Thread.svelte"
@@ -12,15 +13,20 @@ export let block: MdxJsxFlowElement
 
 </script>
 {#if block.name === "Thread"}
-    <Thread {block}/>
+    <Thread
+        {block}/>
 {:else if block.name === "SystemConfig"}
-    <SystemBlock {block}/>
+    <SystemBlock
+        {block}/>
 {:else if block.name === "Message"}
-    <MessageBlock {block}/>
+    <MessageBlock
+        {block}/>
 {:else if block.name === "Columns"}
-    <ColumnsBlock {block}/>
+    <ColumnsBlock
+        {block}/>
 {:else if block.name === "Column"}
-    <ColumnBlock {block}/>
+    <ColumnBlock
+        {block}/>
 {:else}
     <Unsupported/>
 {/if}

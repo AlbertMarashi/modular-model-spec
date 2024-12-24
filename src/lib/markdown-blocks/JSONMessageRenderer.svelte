@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { Thread } from "$lib/types/messages"
 import CodeBlock from "./CodeBlock.svelte"
 
@@ -12,7 +13,8 @@ export let thread: Thread
             {#each message as subthread}
                 <column>
                     {#if subthread instanceof Array}
-                        <svelte:self thread={subthread} />
+                        <svelte:self
+                            thread={subthread} />
                     {:else}
                         <CodeBlock
                             code={JSON.stringify(subthread, null, 4)}

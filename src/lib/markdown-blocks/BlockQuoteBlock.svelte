@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { Blockquote } from "mdast"
 import BlocksArray from "./BlocksArray.svelte"
 
@@ -6,7 +7,8 @@ export let block: Blockquote
 
 </script>
 <blockquote>
-    <BlocksArray blocks={block.children}/>
+    <BlocksArray
+        blocks={block.children}/>
 </blockquote>
 <style>
 blockquote {

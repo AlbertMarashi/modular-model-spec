@@ -1,11 +1,12 @@
-<script lang="ts">
+<script
+    lang="ts">
 
 export let gap: string | undefined = undefined
 export let padding: string | undefined = undefined
 </script>
 <card-section
-    style:gap
-    style:padding>
+    style:gap={ gap }
+    style:padding={ padding }>
     <slot/>
 </card-section>
 

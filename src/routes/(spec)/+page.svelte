@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import MarkdownRenderer from "$lib/MarkdownRenderer.svelte"
 import PageHead from "$lib/PageHead.svelte"
 import ScrollbarRegion from "$lib/ScrollbarRegion.svelte"
@@ -24,8 +25,10 @@ export let content: HTMLElement
         </toc-contents>
     </toc>
     <ScrollbarRegion>
-        <spec bind:this={ content }>
-            <MarkdownRenderer markdown={data.spec}/>
+        <spec
+            bind:this={ content }>
+            <MarkdownRenderer
+                markdown={data.spec}/>
         </spec>
     </ScrollbarRegion>
 </page>

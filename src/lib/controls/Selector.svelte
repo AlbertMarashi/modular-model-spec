@@ -1,60 +1,65 @@
-<script lang="ts">
-    import Icon from "$lib/display/Icon.svelte";
-    import Label from "$lib/display/Label.svelte";
-    import UnfoldMoreHorizontal from "svelte-material-icons/UnfoldMoreHorizontal.svelte";
+<script
+    lang="ts">
+import Icon from "$lib/display/Icon.svelte"
+import Label from "$lib/display/Label.svelte"
+import UnfoldMoreHorizontal from "svelte-material-icons/UnfoldMoreHorizontal.svelte"
 
-    let {
-        value = $bindable(""),
-        options = [],
-        label,
-    }: {
-        value: string | null;
-        options: Array<{ value: string | null; label: string }>;
-        label: string;
-    } = $props();
+let {
+    value = $bindable(""),
+    options = [],
+    label,
+}: {
+    value: string | null;
+    options: Array<{ value: string | null; label: string }>;
+    label: string;
+} = $props()
 
-    let open = $state(false);
+let open = $state(false)
 
-    function selectOption(v: string | null) {
-        value = v;
-        open = false;
-    }
+function selectOption(v: string | null) {
+    value = v
+    open = false
+}
 </script>
 
 <select-container>
     <wrapper>
-        <Label text={label} />
+        <Label
+            text={label} />
         <button
-            onclick={() => (open = !open)}
-            class:open
-            aria-haspopup="listbox"
+            class:open={ open }
             aria-expanded={open}
+            aria-haspopup="listbox"
+            onclick={() => (open = !open)}
         >
             <span>
-                {options.find((o) => o.value === value)?.label ??
-                    "Select Model"}
+                { options.find(o => o.value === value)?.label ??
+                    "Select Model" }
             </span>
-            <Icon icon={UnfoldMoreHorizontal} --size="18px" />
+            <Icon
+                --size="18px"
+                icon={UnfoldMoreHorizontal} />
         </button>
     </wrapper>
 
     {#if open}
-        <options-list role="listbox">
+        <options-list
+            role="listbox">
             {#each options as option, i}
                 <option-item
+                    class:selected={ value === option.value }
+                    aria-selected={value === option.value}
+                    data-value={option.value}
                     onclick={() => selectOption(option.value)}
-                    class:selected={value === option.value}
-                    role="option"
                     onkeydown={(e: KeyboardEvent) => {
                         if (e.key === "Enter") {
-                            selectOption(option.value);
+                            selectOption(option.value)
                         }
                     }}
-                    data-value={option.value}
+                    role="option"
                     tabindex="0"
-                    aria-selected={value === option.value}
                 >
-                    {option.label}
+                    { option.label }
                 </option-item>
             {/each}
         </options-list>

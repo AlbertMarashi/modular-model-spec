@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { tweened } from "svelte/motion"
 import { cubicOut } from "svelte/easing"
 import { afterNavigate, beforeNavigate } from "$app/navigation"
@@ -29,7 +30,7 @@ afterNavigate(async () => {
         out:fade|local={ { delay: 500 } }>
         <div
             style:--width="{ $progress * 100 }%"
-            class="progress-sliver" />
+            class="progress-sliver"></div>
     </div>
 {/if}
 

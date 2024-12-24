@@ -1,32 +1,38 @@
-import js from '@eslint/js';
-import ts from 'typescript-eslint';
-import svelte from 'eslint-plugin-svelte';
-import globals from 'globals';
+import js from "@eslint/js"
+import ts from "typescript-eslint"
+import svelte from "eslint-plugin-svelte"
+import globals from "globals"
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
-	js.configs.recommended,
-	...ts.configs.recommended,
-	...svelte.configs['flat/recommended'],
+    js.configs.recommended,
+    ...ts.configs.recommended,
+    ...svelte.configs["flat/recommended"],
     {
-		languageOptions: {
-			globals: {
-				...globals.browser,
-				...globals.node
-			}
-		}
-	},
-	{
-		files: ['**/*.svelte'],
-		languageOptions: {
-			parserOptions: {
-				parser: ts.parser
-			}
-		}
-	},
-	{
-		ignores: ['build/', '.svelte-kit/', 'dist/']
-	},
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                ...globals.node
+            }
+        }
+    },
+    {
+        files: ["**/*.svelte"],
+        languageOptions: {
+            parserOptions: {
+                parser: ts.parser
+            }
+        }
+    },
+    {
+        ignores: [
+            "build/",
+            ".svelte-kit/",
+            ".vercel/",
+            "dist/",
+            "src/lib/queries.ts"
+        ]
+    },
     {
         rules: {
             "arrow-parens": ["error", "as-needed", { requireForBlockBody: false }],
@@ -41,12 +47,13 @@ export default [
             "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
             "svelte/indent": ["error", {
                 "indentScript": false,
+                "switchCase": 1,
                 "indent": 4,
             }],
             "svelte/prefer-style-directive": ["error"],
             "svelte/sort-attributes": ["error"],
             "svelte/shorthand-directive": ["error", {
-                "prefer": "always",
+                "prefer": "never",
             }],
             "svelte/no-spaces-around-equal-signs-in-attribute": ["error"],
             "svelte/html-quotes": ["error", {
@@ -77,7 +84,7 @@ export default [
                 "error",
                 {
                     "multiline": "below", // or "beside"
-                    "singleline": "beside" // "below"
+                    "singleline": "below" // "below"
                 }
             ],
         },

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import Check from "svelte-material-icons/Check.svelte"
 import Close from "svelte-material-icons/Close.svelte"
@@ -52,11 +53,14 @@ $: format = message.role === "assistant" ? formats.find(f => f.name === message.
     <name>
         {#if "correct" in message}
             <icon-wrapper>
-                <Icon icon={message.correct === true ? Check : Close}/>
+                <Icon
+                    icon={message.correct === true ? Check : Close}/>
             </icon-wrapper>
         {/if}
-        <Icon icon={icons[message.role]}/>
-        <code class="role">
+        <Icon
+            icon={icons[message.role]}/>
+        <code
+            class="role">
             { message.role }
         </code>
         {#if message.role === "assistant"}
@@ -67,7 +71,8 @@ $: format = message.role === "assistant" ? formats.find(f => f.name === message.
                 bind:value={ message.format }/>
 
             {#if !format}
-                <format class="error">
+                <format
+                    class="error">
                     -&gt;&gt;
                     <code>
                         <Icon
@@ -90,7 +95,8 @@ $: format = message.role === "assistant" ? formats.find(f => f.name === message.
             <button
                 class="delete"
                 on:click={ () => dispatch("delete") }>
-                <Icon icon={Delete}/>
+                <Icon
+                    icon={Delete}/>
             </button>
         {/if}
     </name>
@@ -106,12 +112,14 @@ $: format = message.role === "assistant" ? formats.find(f => f.name === message.
                 end_turn
             </code>
             {#if selected === index}
-                <Toggle bind:value={ message.end_turn }/>
+                <Toggle
+                    bind:value={ message.end_turn }/>
             {/if}
         </format>
     {/if}
     {#if message.role === "assistant" && format && format.halt_on_completion === true}
-        <format class="halted">
+        <format
+            class="halted">
             <code>
                 <Icon
                     --size="16px"

@@ -15,19 +15,22 @@ export async function login() {
 }
 
 </script>
-<AccountPopout bind:opened={ account_popout_opened }/>
+<AccountPopout
+    bind:opened={ account_popout_opened }/>
 <header>
     <inner>
         <a
             class="logo-area"
             href="/">
-            <Logo size={32}/>
+            <Logo
+                size={32}/>
             <strong>Modular Model</strong> Spec
         </a>
 
         <right>
             <strong>Dark Mode</strong>
-            <Toggle bind:value={ dark_mode }/>
+            <Toggle
+                bind:value={ dark_mode }/>
             {#if !$page.data.session}
                 <Chip
                     label="Login"

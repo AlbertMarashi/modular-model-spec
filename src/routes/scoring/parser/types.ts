@@ -75,7 +75,7 @@ export class StringIter extends Iter<string> {
     }
 
     consume_until(str: string) {
-        let text = ""
+        const text = ""
 
         return text
     }

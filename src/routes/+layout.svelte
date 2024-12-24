@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import "./global.css"
 import "./variables.css"
 import "./normalise.css"
@@ -8,10 +9,12 @@ import Header from "./Header.svelte"
 
 let dark_mode = true
 </script>
-<main class:dark_mode>
+<main
+    class:dark_mode={ dark_mode }>
     <PageLoaderBar/>
     <AlertBar/>
-    <Header bind:dark_mode/>
+    <Header
+        bind:dark_mode={ dark_mode }/>
     <slot />
 </main>
 <style>

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import Pause from "svelte-material-icons/Pause.svelte"
 import CodeTags from "svelte-material-icons/CodeTags.svelte"
@@ -48,7 +49,8 @@ type Sampler =
 type CustomSampler = null
 
 </script>
-<div class="system">
+<div
+    class="system">
     <section>
         <system-heading>
             <Icon
@@ -71,19 +73,22 @@ type CustomSampler = null
                             <format>-&gt;&gt;<code>{ format.name }</code> -&gt;</format>
                             {#if format.halt_on_start}
                                 <tag>
-                                    <Icon icon={Pause}/>
+                                    <Icon
+                                        icon={Pause}/>
                                     Halt on start
                                 </tag>
                             {/if}
                             {#if format.halt_on_completion}
                                 <tag>
-                                    <Icon icon={Pause}/>
+                                    <Icon
+                                        icon={Pause}/>
                                     Halt on completion
                                 </tag>
                             {/if}
                             {#if format.sampler}
                                 <tag>
-                                    <Icon icon={CodeTags}/>
+                                    <Icon
+                                        icon={CodeTags}/>
                                     { format.sampler } Sampler
                                 </tag>
                             {/if}

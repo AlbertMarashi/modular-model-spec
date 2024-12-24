@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Alert from "svelte-material-icons/Alert.svelte"
 import Info from "svelte-material-icons/Information.svelte"
 import Check from "svelte-material-icons/CheckCircle.svelte"
@@ -43,7 +44,8 @@ $effect(() => {
 })
 
 </script>
-<div class="action-container-wrapper">
+<div
+    class="action-container-wrapper">
     {#each global_state.inner.alerts as alert, i}
         <div
             class="action-bar"
@@ -59,14 +61,16 @@ $effect(() => {
             }}
             role="button"
             tabindex="0">
-            <Icon icon={icons[alert.type]}/>
+            <Icon
+                icon={icons[alert.type]}/>
             <alert-data>
                 {#if alert.code}
                     <code>
                         { alert.code }
                     </code>
                 {/if}
-                <div class="text">
+                <div
+                    class="text">
                     { alert.message }
                 </div>
             </alert-data>

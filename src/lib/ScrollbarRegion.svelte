@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Scrollbar from "./Scrollbar.svelte"
 
 let viewport: Element
@@ -8,7 +9,8 @@ export let content_width: string | undefined = undefined
 export let content_height: string | undefined = undefined
 </script>
 
-<div class="wrapper">
+<div
+    class="wrapper">
     <div
         bind:this={ viewport }
         class="viewport">

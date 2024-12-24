@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import SystemBlock from "./SystemBlock.svelte"
 import MessageBlock from "./MessageBlock.svelte"
 import Unsupported from "./Unsupported.svelte"
@@ -90,33 +91,42 @@ function get_first_code_block(block: BlockContent): Code | null {
     return null
 }
 </script>
-<div class="thread">
+<div
+    class="thread">
     <inner>
         <section-heading>
-            <Icon icon={Forum}/>
+            <Icon
+                icon={Forum}/>
             Thread
-            <div class="toggler">
+            <div
+                class="toggler">
                 JSON
-                <Toggle bind:value={ json_mode }/>
+                <Toggle
+                    bind:value={ json_mode }/>
             </div>
         </section-heading>
         <messages>
             {#if json_mode}
-                <JsonMessageRenderer thread={thread}/>
+                <JsonMessageRenderer
+                    thread={thread}/>
             {:else}
                 {#each block.children as child}
                     {#if child.type === "mdxJsxFlowElement"}
                         {#if child.name === "SystemConfig"}
-                            <SystemBlock block={child}/>
+                            <SystemBlock
+                                block={child}/>
                         {:else if child.name === "Message"}
-                            <MessageBlock block={child}/>
+                            <MessageBlock
+                                block={child}/>
                         {:else if child.name === "Columns"}
-                            <ColumnsBlock block={child}/>
+                            <ColumnsBlock
+                                block={child}/>
                         {:else}
                             <Unsupported/>
                         {/if}
                     {:else}
-                        <GenericBlock block={child}/>
+                        <GenericBlock
+                            block={child}/>
                     {/if}
                 {/each}
             {/if}

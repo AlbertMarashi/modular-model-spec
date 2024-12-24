@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { ComponentType } from "svelte"
 
 export let icon: ComponentType
@@ -8,7 +9,8 @@ export let icon: ComponentType
     class="icon"
     on:click
     on:keypress>
-    <svelte:component this={ icon }/>
+    <svelte:component
+        this={ icon }/>
 </div>
 <style>
 

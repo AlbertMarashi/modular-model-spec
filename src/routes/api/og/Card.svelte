@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Logo from "$lib/display/Logo.svelte"
 import Robot from "svelte-material-icons/Robot.svelte"
 import ChevronDoubleRight from "svelte-material-icons/ChevronDoubleRight.svelte"
@@ -6,23 +7,32 @@ import ChevronDoubleRight from "svelte-material-icons/ChevronDoubleRight.svelte"
 export let title: string
 export let description: string | null = null
 </script>
-<div class="card">
-    <div class="logo">
-        <div class="symbol">
-            <Logo size={100}/>
+<div
+    class="card">
+    <div
+        class="logo">
+        <div
+            class="symbol">
+            <Logo
+                size={100}/>
         </div>
     </div>
-    <div class="title-area">
+    <div
+        class="title-area">
         <h1>
             { title }
         </h1>
     </div>
     {#if description}
-        <span class="description">{ description }</span>
+        <span
+            class="description">{ description }</span>
     {/if}
-    <div class="fake-button">
+    <div
+        class="fake-button">
         Read the Spec
-        <div class="icon"><ChevronDoubleRight size="1.5em"/></div>
+        <div
+            class="icon"><ChevronDoubleRight
+            size="1.5em"/></div>
     </div>
 </div>
 <style>

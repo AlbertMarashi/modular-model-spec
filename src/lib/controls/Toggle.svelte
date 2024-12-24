@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 
 export let value: boolean = false
 </script>

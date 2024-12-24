@@ -1,12 +1,15 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Card from "../Card.svelte"
 
 export let title = "Test OG Graph"
 export let description = "This is a test of the OG Graph"
 
 </script>
-<div class="card-wrapper">
-    <div class="inner">
+<div
+    class="card-wrapper">
+    <div
+        class="inner">
         <Card
             {description}
             {title} />

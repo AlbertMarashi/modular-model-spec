@@ -20,7 +20,7 @@ export type Branch = {
     note?: string
     source: string
     scores: number[]
-    state: { [key: string]: unknown }
+    state: Record<string, unknown>
     metadata: BranchMetadata
     truncation?: TruncationWindow
 }

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { MdxJsxFlowElement } from "mdast-util-mdx"
 import GenericBlock from "./GenericBlock.svelte"
 
@@ -8,7 +9,8 @@ export let block: MdxJsxFlowElement
 </script>
 <column>
     {#each block.children as child}
-        <GenericBlock block={child}/>
+        <GenericBlock
+            block={child}/>
     {/each}
 </column>
 <style>

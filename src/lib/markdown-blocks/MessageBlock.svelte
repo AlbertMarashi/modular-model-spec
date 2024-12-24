@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { MdxJsxFlowElement } from "mdast-util-mdx-jsx"
 import BlocksArray from "./BlocksArray.svelte"
 import type { Code } from "mdast"
@@ -51,12 +52,15 @@ const icons = {
     <name>
         {#if "correct" in attributes}
             <icon-wrapper>
-                <Icon icon={attributes.correct === true ? Check : Close}/>
+                <Icon
+                    icon={attributes.correct === true ? Check : Close}/>
             </icon-wrapper>
         {/if}
-        <Icon icon={icons[attributes.role]}/>
+        <Icon
+            icon={icons[attributes.role]}/>
         <!-- <MarkdownRenderer markdown={`"role": "${attributes.role}"`}/> -->
-        <code class="role">
+        <code
+            class="role">
             { attributes.role }
         </code>
         {#if attributes.role === "assistant"}
@@ -69,7 +73,8 @@ const icons = {
             <code>{ attributes.name }</code>
         {/if}
     </name>
-    <BlocksArray blocks={block.children}/>
+    <BlocksArray
+        blocks={block.children}/>
     {#if "end_turn" in attributes && attributes.end_turn === true}
         <format>
             <code>
@@ -81,7 +86,8 @@ const icons = {
         </format>
     {/if}
     {#if "halted_on_completion" in attributes && attributes.halted_on_completion === true}
-        <format class="halted">
+        <format
+            class="halted">
             <code>
                 <Icon
                     --size="16px"

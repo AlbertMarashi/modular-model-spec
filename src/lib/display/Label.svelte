@@ -1,9 +1,11 @@
-<script lang="ts">
-    export let text: string;
+<script
+    lang="ts">
+export let text: string
 </script>
 
-<div class="label">
-    {text}
+<div
+    class="label">
+    { text }
 </div>
 
 <style>

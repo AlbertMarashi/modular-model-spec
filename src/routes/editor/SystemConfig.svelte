@@ -1,6 +1,7 @@
 
 
-<script lang="ts">
+<script
+    lang="ts">
 import AllowedAssistantFormat from "./AllowedAssistantFormat.svelte"
 import type { Thread } from "./editor_types"
 import Chip from "$lib/controls/Chip.svelte"
@@ -40,7 +41,7 @@ function add_message() {
     {#each thread.allowed_formats as format}
         <AllowedAssistantFormat
             selected={selected === "config"}
-            bind:format/>
+            bind:format={ format }/>
     {/each}
     {#if selected === "config"}
         <Chip

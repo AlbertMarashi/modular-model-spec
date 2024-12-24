@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Toggle from "$lib/controls/Toggle.svelte"
 import Icon from "$lib/display/Icon.svelte"
 import Pause from "svelte-material-icons/Pause.svelte"
@@ -26,7 +27,8 @@ export let format: {
             Halt on completion
         </code>
         {#if selected}
-            <Toggle bind:value={ format.halt_on_completion }/>
+            <Toggle
+                bind:value={ format.halt_on_completion }/>
         {/if}
     </format>
 </allowed-format>

@@ -541,7 +541,7 @@ export function mdxJsxToMarkdown(options) {
    * @type {ToMarkdownHandle}
    * @param {MdxJsxFlowElement | MdxJsxTextElement} node
    */
-    // eslint-disable-next-line complexity
+     
     function mdxElement(node, _, state, info) {
         const flow = node.type === "mdxJsxFlowElement"
         const selfClosing = node.name

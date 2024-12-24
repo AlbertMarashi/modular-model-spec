@@ -1,7 +1,7 @@
-import { languages } from "../languages";
-import { Interceptor, type Parser } from "../parsers";
-import { TokenFlag } from "../types";
-import { consume_until, expect_text, peek_text } from "../utils";
+import { languages } from "../languages"
+import { Interceptor, type Parser } from "../parsers"
+import { TokenFlag } from "../types"
+import { consume_until, expect_text, peek_text } from "../utils"
 
 export function parse_thread(parser: Parser) {
     while (parser.peek_i(0) !== null) {
@@ -35,7 +35,7 @@ function parse_message(parser: Parser) {
     if (!consume_special_name(parser, "content")) return null
 
     const parse_fn = languages[format] || languages["markdown"]
-    const interceptor = new Interceptor(parser, (p) => peek_text(p, "<|"))
+    const interceptor = new Interceptor(parser, p => peek_text(p, "<|"))
 
     parse_fn(interceptor)
 

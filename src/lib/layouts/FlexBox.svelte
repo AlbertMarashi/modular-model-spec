@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 
 export let maxWidth: string | undefined = undefined
 export let padding: string | undefined = undefined
@@ -9,9 +10,9 @@ export let align: "center" | "flex-start" | "flex-end" | "space-between" | "spac
 </script>
 <flex-box
     style:justify-content={ justify }
-    style:padding
+    style:padding={ padding }
     style:max-width={ maxWidth }
-    style:gap
+    style:gap={ gap }
     style:align-items={ align }
     style:flex-direction={ direction }>
     <slot/>

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { MdxJsxFlowElement } from "mdast-util-mdx"
 import GenericBlock from "./GenericBlock.svelte"
 import ScrollbarRegion from "$lib/ScrollbarRegion.svelte"
@@ -9,11 +10,13 @@ export let block: MdxJsxFlowElement
 $: attributes = get_block_attributes<{ wide?: boolean }>(block)
 
 </script>
-<columns-wrapper class:wide={ attributes.wide }>
+<columns-wrapper
+    class:wide={ attributes.wide }>
     <ScrollbarRegion>
         <columns>
             {#each block.children as child}
-                <GenericBlock block={child}/>
+                <GenericBlock
+                    block={child}/>
             {/each}
         </columns>
     </ScrollbarRegion>

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import hljs from "highlight.js"
 // import Tag from "$lib/display/Tag.svelte"
 import "./code-theme.css"
@@ -49,7 +50,8 @@ $: numbers = lines.map((_, i) => {
 // }
 
 </script>
-<pre bind:this={ pre }>
+<pre
+    bind:this={ pre }>
         <div
             class="header"
             class:show-header={ false }>
@@ -63,19 +65,28 @@ $: numbers = lines.map((_, i) => {
                 <Icon icon={ContentCopy}/>
             </div> -->
         </div>
-        <code bind:this={ code_el }>
-            <div class="line">
-                <div class="number small">{ Array(digits).fill(" ").join("") }</div>
+        <code
+bind:this={ code_el }>
+            <div
+class="line">
+                <div
+class="number small">{ Array(digits).fill(" ").join("") }</div>
             </div>
             {#each lines as line, i}
-                <span class="line">
-                    <div class="number"><span class="zero">{ numbers[i][0] }</span>{ numbers[i][1] }</div>
+                <span
+class="line">
+                    <div
+class="number"><span
+class="zero">{ numbers[i][0] }</span>{ numbers[i][1] }</div>
                     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    <div class="code">{@html line}</div>
+                    <div
+class="code">{@html line}</div>
                 </span>
             {/each}
-            <div class="line">
-                <div class="number small">{ Array(digits).fill(" ").join("") }</div>
+            <div
+class="line">
+                <div
+class="number small">{ Array(digits).fill(" ").join("") }</div>
             </div>
         </code>
 </pre>

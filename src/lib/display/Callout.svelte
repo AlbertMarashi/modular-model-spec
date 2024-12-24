@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Alert from "svelte-material-icons/Alert.svelte"
 import CheckCircle from "svelte-material-icons/CheckCircle.svelte"
 import CloseCircle from "svelte-material-icons/CloseCircle.svelte"
@@ -14,13 +15,16 @@ const icons = {
 
 export let type: keyof typeof icons
 </script>
-<div class="callout {type}">
-    <div class="icon">
+<div
+    class="callout {type}">
+    <div
+        class="icon">
         <Icon
             --size="20px"
             icon={icons[type]}/>
     </div>
-    <div class="content">
+    <div
+        class="content">
         <slot/>
     </div>
 </div>

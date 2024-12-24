@@ -1,5 +1,3 @@
-
-
 /** ===== GLOBAL CSS VARIABLES ===== */
 :root {
     --brand-rgb: 40, 150, 150;
@@ -22,7 +20,7 @@
     --foreground-rgb: 255, 255, 255;
     --foreground: rgb(var(--foreground-rgb)); */
 
-    --red-rgb: 226, 50, 50;
+    --red-rgb: 192, 64, 64;
     --red: rgb(var(--red-rgb));
 
     --orange-rgb: 220, 150, 0;

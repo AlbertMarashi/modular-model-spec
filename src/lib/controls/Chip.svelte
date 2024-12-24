@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import type { ComponentType } from "svelte"
 export let right_icon: ComponentType | undefined = undefined
@@ -11,10 +12,10 @@ export let small: boolean = false
 </script>
 
 <button
-    class:disabled
+    class:disabled={ disabled }
     class:filled={ style === "filled" }
-    class:interactive
-    class:small
+    class:interactive={ interactive }
+    class:small={ small }
     class:tonal={ style === "tonal" }
     class:translucent={ style === "translucent" }
     class:transparent={ style === "transparent" }

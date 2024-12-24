@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import GenericBlock from "./GenericBlock.svelte"
 import type { RootContent } from "mdast"
 
@@ -9,10 +10,11 @@ export let give_max_width: boolean = false
 
 <div
     class="blocks-array"
-    class:give_max_width
-    class:list>
+    class:give_max_width={ give_max_width }
+    class:list={ list }>
     {#each blocks as block}
-        <GenericBlock {block}/>
+        <GenericBlock
+            {block}/>
     {/each}
 </div>
 

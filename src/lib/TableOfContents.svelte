@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { browser } from "$app/environment"
 import { generate_ast } from "$lib/utils/ast"
 import { get_plain_text } from "$lib/utils/plain_text"
@@ -79,11 +80,12 @@ onDestroy(() => {
 })
 
 </script>
-<div class="toc">
+<div
+    class="toc">
     {#each headings as heading}
         <TocSection
             heading={heading}
-            bind:active_id/>
+            bind:active_id={ active_id }/>
     {/each}
 </div>
 <style>

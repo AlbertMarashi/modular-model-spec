@@ -1,4 +1,5 @@
-import { Iter, TokenFlag, type Token } from "./types"
+import type { Iter} from "./types"
+import { TokenFlag, type Token } from "./types"
 
 export abstract class Parser implements Iter<string> {
     constructor() { }

@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { get_plain_text } from "$lib/utils/plain_text"
 import type { Heading } from "mdast"
 import PhrasingContent from "./PhrasingContentArray.svelte"
@@ -33,12 +34,13 @@ function copy_link() {
     bind:this={ heading }
     {id}
     class="heading"
-    class:highlight
+    class:highlight={ highlight }
     role="button"
     tabindex="0"
     on:click={ copy_link }>
     <content>
-        <PhrasingContent children={block.children}/>
+        <PhrasingContent
+            children={block.children}/>
     </content>
     <link-selector>
         <Icon

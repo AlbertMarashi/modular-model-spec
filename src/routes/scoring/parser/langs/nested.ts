@@ -1,4 +1,4 @@
-import { Iter, type Token } from "../types";
+import { Iter, type Token } from "../types"
 
 
 export class NestedParser extends Iter<string> {

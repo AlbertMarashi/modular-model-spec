@@ -1,56 +1,60 @@
-<script lang="ts">
-    import Label from "$lib/display/Label.svelte";
-    import CodeEditor from "./CodeEditor.svelte";
-    import EditorThread from "./EditorThread.svelte";
-    import type { Thread } from "./editor_types";
-    import { thread_to_tokens } from "./editor_types";
-    import SingleSelectChipGroup from "$lib/controls/SingleSelectChipGroup.svelte";
-    import { safe_db } from "$lib/stores/database";
-    import { UpsertThreadQuery } from "$lib/queries";
-    import Toggle from "$lib/controls/Toggle.svelte";
+<script
+    lang="ts">
+import Label from "$lib/display/Label.svelte"
+import CodeEditor from "./CodeEditor.svelte"
+import EditorThread from "./EditorThread.svelte"
+import type { Thread } from "./editor_types"
+import { thread_to_tokens } from "./editor_types"
+import SingleSelectChipGroup from "$lib/controls/SingleSelectChipGroup.svelte"
+import { safe_db } from "$lib/stores/database"
+import { UpsertThreadQuery } from "$lib/queries"
+import Toggle from "$lib/controls/Toggle.svelte"
 
-    let {
-        record = $bindable(),
-    }: {
-        record: Thread;
-    } = $props();
+let {
+    record = $bindable(),
+}: {
+    record: Thread;
+} = $props()
 
-    let pretty = $state(true);
-    let view_type: "editor" | "tokens" | "json" = $state("editor");
+let pretty = $state(true)
+let view_type: "editor" | "tokens" | "json" = $state("editor")
 
-    $effect(() => {
-        save_record($state.snapshot(record));
-    });
+$effect(() => {
+    save_record($state.snapshot(record))
+})
 
-    async function save_record(thread: Thread) {
-        const db = await safe_db();
+async function save_record(thread: Thread) {
+    const db = await safe_db()
 
-        await db.typed(UpsertThreadQuery, {
-            thread,
-        });
-    }
+    await db.typed(UpsertThreadQuery, {
+        thread,
+    })
+}
 </script>
 
 <editor-container>
     <contents>
         <horizontal>
-            <Label text="Dataset Example" />
+            <Label
+                text="Dataset Example" />
             <SingleSelectChipGroup
                 buttons={[
                     { left_icon: undefined, label: "Editor", value: "editor" },
                     { left_icon: undefined, label: "Tokens", value: "tokens" },
                     { left_icon: undefined, label: "JSON", value: "json" },
                 ]}
-                bind:value={view_type}
+                bind:value={ view_type }
             />
         </horizontal>
     </contents>
     <contents>
         {#if view_type === "editor"}
-            <EditorThread bind:record />
+            <EditorThread
+                bind:record={ record } />
         {:else if view_type === "tokens"}
             <format>
-                Pretty? <Toggle bind:value={pretty} />
+                Pretty? <Toggle
+                    bind:value={ pretty } />
             </format>
             <CodeEditor
                 code={thread_to_tokens(record, pretty)}

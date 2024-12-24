@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import CheckboxBlank from "svelte-material-icons/CheckboxBlank.svelte"
 import CheckboxMarked from "svelte-material-icons/CheckboxMarked.svelte"
@@ -9,7 +10,8 @@ export let block: ListItem
 </script>
 <li>
     {#if typeof block.checked === "boolean"}
-        <Icon icon={block.checked ? CheckboxMarked : CheckboxBlank}/>
+        <Icon
+            icon={block.checked ? CheckboxMarked : CheckboxBlank}/>
     {/if}
     <BlocksArray
         blocks={block.children}

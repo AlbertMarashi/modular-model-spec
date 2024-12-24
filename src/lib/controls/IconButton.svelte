@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import Icon from "$lib/display/Icon.svelte"
 import type { ComponentType } from "svelte"
 
@@ -7,14 +8,15 @@ export let disabled: boolean = false
 export let type: "filled" | "tonal" |  "outlined" | "transparent"
 </script>
 <button
-    class:disabled
+    class:disabled={ disabled }
     class:filled={ type === "filled" }
     class:outlined={ type === "outlined" }
     class:tonal={ type === "tonal" }
     class:transparent={ type === "transparent" }
     {disabled}
     on:click>
-    <Icon {icon}/>
+    <Icon
+        {icon}/>
 </button>
 <style>
 

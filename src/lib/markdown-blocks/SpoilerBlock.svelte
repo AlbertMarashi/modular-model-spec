@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import type { ContainerDirective } from "mdast-util-directive"
 import BlocksArray from "./BlocksArray.svelte"
 
@@ -7,8 +8,10 @@ export let block: ContainerDirective
 </script>
 <details>
     <summary>Spoiler</summary>
-    <div class="content">
-        <BlocksArray blocks={block.children}/>
+    <div
+        class="content">
+        <BlocksArray
+            blocks={block.children}/>
     </div>
 </details>
 <style>

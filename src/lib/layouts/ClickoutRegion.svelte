@@ -1,4 +1,5 @@
-<script lang="ts">
+<script
+    lang="ts">
 import { browser } from "$app/environment"
     
 import { onDestroy, onMount, setContext } from "svelte"
