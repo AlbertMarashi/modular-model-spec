@@ -1,99 +1,78 @@
-<script lang="ts">
-import { type RecordId } from "$lib/pojo_surreal";
-import { TokenFlag, type Token } from "./parser/types";
-import Cell from "./Cell.svelte";
-import TokenCell from "./TokenCell.svelte";
+<script
+    lang="ts">
+import type { BranchLayout } from "./scoring.svelte"
+import CharsRenderer from "./CharsRenderer.svelte"
 
 
-let {
+const {
     branch,
-    tokens,
-    dragging = $bindable(),
+    layout,
 }: {
-    branch: RecordId<"branch">;
-    tokens: Token[];
-    dragging: boolean;
-} = $props();
+    branch: string
+    layout: BranchLayout
+} = $props()
+
 </script>
 
 <grid>
-    {#each tokens as token, i}
-        {#if token.error && !token.len}
-            <Cell
-                token={token}
-                i={null}
-                branch={branch}
-                bind:dragging={dragging}
-            />
-        {:else if token.flags & TokenFlag.special}
-            <TokenCell token={token} branch={branch} bind:dragging={dragging} />
-        {:else}
-            {#each { length: token.len }, i}
-                <Cell
-                    token={token}
-                    i={token.start + i}
-                    branch={branch}
-                    bind:dragging={dragging}
-                />
-            {/each}
-        {/if}
+    <!-- <split>
+        <Icon
+            icon={CallSplit} />
+    </split> -->
+    {#each layout as render_token}
+        <!-- {#key render_token} -->
+        <CharsRenderer
+            branch={branch}
+            render_token={render_token}
+        />
+        <!-- {/key} -->
     {/each}
-    <last>
-
-    </last>
+    <!-- <split>
+        <Icon
+            icon={CallSplit} />
+    </split> -->
 </grid>
 
 <style>
-    @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
 
-    :root {
-        /* Markdown marks */
-        --text: inherit;
-        --styling: #7981db;
-        --heading: #1d6a89;
-        --code: #c7a1c5;
-        --link: #2563eb;
-        --list: #5476ab;
-        --quote: #6b7280;
-        --hr: #9ca3af;
+grid {
+    --gap: 0.1ch;
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    display: grid;
+    font-weight: 450;
+    max-width: 100%;
+    min-width: 0;
+    font-family: "Fira Code", monospace;
+    user-select: none;
+    grid-template-columns: repeat(80, 1fr);
+    grid-auto-rows: 30px;
+    /* gap: 3px 0; */
+    /* background: rgba(var(--foreground-rgb), 0.03); */
+    /* border: 1px solid rgba(var(--foreground-rgb), 0.1); */
+    /* border-radius: 16px; */
 
-        /* Thread marks */
-        --special: #73fff681;
+}
 
-        /* Code marks */
-        --punctuation: #6b7280;
-        --tag: #2563eb;
-        --keyword: #d454d6;
-        --ident: #5576ac;
-        --function: #2563eb;
-        --string: #059669;
-        --number: #26dc9f;
-        --boolean: #d16b1d;
-        --null: #9333ea;
-        --type: #0891b2;
-        --property: #0891b2;
-        --comment: #6b7280;
-        --regexp: #d34e4e;
-        --bracket: #6b7280;
+split {
+    grid-column: span 4;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex; 
+    /* outline: 2px solid var(--blue); */
+    background: rgba(var(--purple-rgb), 0.2);
+    outline-offset: -2px;
+    border-radius: 6px;
+    color: var(--purple);
+    font-size: 18px;
+    margin-left: 2px;
+    margin-right: 2px;
+    :global {
+        > * {
+            transform: rotate(90deg);
+        }
     }
 
-    grid {
-        --gap: 0.1ch;
-        position: relative;
-        font-family: monospace;
-        z-index: 1;
-        font-size: 14px;
-        display: grid;
-        /* gap: 3px 0; */
-        font-weight: 450;
-        grid-template-columns: repeat(auto-fill, calc(1ch + var(--gap)));
-        max-width: 100%;
-        min-width: 0;
-        font-family: "Fira Code", monospace;
-        user-select: none;
-        /* background: rgba(var(--foreground-rgb), 0.03); */
-        /* border: 1px solid rgba(var(--foreground-rgb), 0.1); */
-        /* border-radius: 16px; */
-    }
-
+}
 </style>

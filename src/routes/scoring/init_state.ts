@@ -184,8 +184,10 @@ const source = [
 
 
 export function init_branches() {
-    const b1 = init_branch(tokens)
-    scoring_state.branch_map[b1.id.id] = b1
+    // const b1 = init_branch(tokens)
+    // const b1 = init_branch("hello world")
+    // const b1 = init_branch("<|role|>model<|format|>markdown<|content|>hello world<|end_message|>")
+    // scoring_state.branch_map[b1.id.id] = b1
 
     
     // const b2 = init_branch("le|>" + source)
@@ -193,5 +195,32 @@ export function init_branches() {
 
     // scoring_state.branch_map[b2.id.id] = b2
 
-    scoring_state.active = b1.id
+    // scoring_state.active = b1.id
+
+    // sources_to_branches("a", "baz", "f")
+
+    // scoring_state.active = scoring_state.heirarchy[0].id.id
+
+    //     sources_to_branches(
+    //         "<|role|>model<|format|>markdown<|content|>\n" +
+    //             "```ts\n" +
+    //             "type GenerateSitemap = {" +
+    //         `
+    //     name: "foo"
+    // }` +
+    //             "\n```\n" +
+    //             "<|end_message|>"
+    //     )
+    sources_to_branches(tokens)
+}
+
+function sources_to_branches(...sources: string[]) {
+    const branches = sources.map(source => init_branch(source))
+    
+    branches.map((branch, index) => {
+        branch.parent = branches?.[index - 1]?.id
+        scoring_state.branch_map[branch.id.id] = branch
+    })
+
+    scoring_state.active = branches[branches.length - 1].id.id
 }

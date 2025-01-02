@@ -1,8 +1,7 @@
 <script
     lang="ts">
-import Scorer from "./Scorer.svelte"
 import {
-    branch,
+    branch_at_cursor,
     scoring_state,
     init_scoring_state,
 } from "./scoring.svelte"
@@ -11,20 +10,20 @@ import Selector from "$lib/controls/Selector.svelte"
 import Label from "$lib/display/Label.svelte"
 import Button from "$lib/controls/Button.svelte"
 import { init_branches } from "./init_state"
-import BranchNavigation from "./BranchNavigation.svelte"
-import BranchControls from "./BranchControls.svelte"
+import Branch from "./Branch.svelte"
 
 init_scoring_state()
 init_branches()
 
-let generation = $state({
+const generation = $state({
     model: "gpt-4",
     sampler: null,
     // stop: END_MESSAGE,
     temperature: 0.7,
     max_tokens: 1024,
 })
-let dragging = $state(false)
+
+let editing = $state(false)
 
 const keymap: Record<string, number> = {
     Delete: 0,
@@ -43,6 +42,7 @@ const keymap: Record<string, number> = {
 
 // Handle keydown events
 function keydown(e: KeyboardEvent) {
+    if (editing) return
     const score = keymap[e.key]
     const start = Math.min(
         scoring_state.cursor_start,
@@ -56,20 +56,20 @@ function keydown(e: KeyboardEvent) {
     if (score !== undefined) {
         e.preventDefault()
 
-        let s = scoring_state
-        // Get the hierarchy once
-        const hierarchy = s.heirarchy
+        const s = scoring_state
         const branch_mapping = $state.snapshot(s.branch_mapping)
         const relative_mapping = $state.snapshot(s.relative_mapping)
+
+        console.log(relative_mapping)
 
         // Update scores for the selected range
         for (let i = start; i <= end; i++) {
             const branch_index = branch_mapping[i]
             const relative_index = relative_mapping[i]
 
-            const branch = hierarchy[branch_index]
+            const branch = scoring_state.heirarchy[branch_index]
 
-            branch.scores[relative_index] = score
+            scoring_state.branch_map[branch].scores[relative_index] = score
         }
 
         scoring_state.cursor_start = scoring_state.cursor_end = end + 1
@@ -80,36 +80,70 @@ function keydown(e: KeyboardEvent) {
     if (e.key === "ArrowLeft" && start >= 1)
         scoring_state.cursor_start = scoring_state.cursor_end = start - 1
 }
+
+function get_target_index(e: MouseEvent): number | null {
+    if (editing) return null
+    const target = e.target as HTMLElement
+    const index = target.getAttribute("i")
+    if (index === null) return null
+    return parseInt(index)
+}
+
+function handle_click(e: MouseEvent) {
+    const i = get_target_index(e)
+    if (i === null) return
+    scoring_state.cursor_start = scoring_state.cursor_end = i
+}
+
+function handle_mouse_down(e: MouseEvent) {
+    const i = get_target_index(e)
+    if (i === null) return
+    scoring_state.cursor_start = scoring_state.cursor_end = i
+    scoring_state.dragging = true
+}
+
+function handle_mouse_over(e: MouseEvent) {
+    if (!scoring_state.dragging) return
+    const i = get_target_index(e)
+    if (i === null) return
+    scoring_state.cursor_end = i
+}
+
 </script>
 
 <svelte:window
+    onclick={handle_click}
     onkeydown={keydown}
-    onmouseup={() => (dragging = false)} />
+    onmousedown={handle_mouse_down}
+    onmouseover={handle_mouse_over}
+    onmouseup={() => (scoring_state.dragging = false)} />
 
 <page-layout>
     <content-area>
+        <!-- <Tree /> -->
         <thread>
-            {#each scoring_state.heirarchy as branch, i (branch.id.id)}
-                <branch>
-                    <Scorer
-                        branch={branch.id}
-                        tokens={scoring_state.branch_tokens[i]}
-                        bind:dragging={ dragging }
-                    />
-                    <BranchControls/>
-                </branch>
-                <BranchNavigation/>
+            {#each scoring_state.layouts as layout, i}
+                <Branch
+                    i={i}
+                    layout={layout}
+                    bind:editing={ editing }
+                />
             {/each}
         </thread>
-        <!-- <Tree /> -->
     </content-area>
 
     <sidebar>
         <section>
-            <Button
-                label="Branch at Position"
-                type="tonal"
-                on:click={ branch } />
+            <control-group>
+                <Button
+                    label={editing ? "Save" : "Edit"}
+                    type="tonal"
+                    on:click={ () => editing = !editing } />
+                <Button
+                    label="Branch"
+                    type="tonal"
+                    on:click={ branch_at_cursor } />
+            </control-group>
             <!-- <control-group class="horizontal">
                 <Chip label="Branch" style="filled" />
                 <Chip label="Generate" />
@@ -170,16 +204,15 @@ function keydown(e: KeyboardEvent) {
     }
 
     content-area {
-        padding: 24px;
         overflow-y: auto;
         background: rgba(var(--foreground-rgb), 0.05);
         display: flex;
         flex: 1;
         align-items: center;
         flex-direction: column;
-        /* remove the scrollbar background */
         scrollbar-color: rgba(var(--foreground-rgb), 0.1) transparent;
         scrollbar-gutter: stable;
+        padding-bottom: 400px;
     }
 
     hint {
@@ -215,56 +248,10 @@ function keydown(e: KeyboardEvent) {
         padding: 48px 0;
     }
 
-    branch {
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        padding: 32px 24px;
-        border-radius: 16px;
-        background: var(--background);
-        /* border-bottom: 2px dashed rgba(var(--foreground-rgb), 0.1); */
-
-        /* &:first-child {
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        &:last-child {
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            border-bottom: none;
-        } */
-
-
-        /* 
-        &::after, &::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 30px;
-        }
-
-        &:not(:last-child) {
-            &::after {
-                bottom: 0;
-                background: linear-gradient(
-                    to bottom,
-                    var(--background),
-                    rgba(var(--foreground-rgb), 0.05)
-                );
-            }
-        }
-        &:not(:first-child) {
-            &::before {
-                top: 0;
-                background: linear-gradient(
-                    to top,
-                    var(--background),
-                    rgba(var(--foreground-rgb), 0.05)
-                );
-            }
-        } */
+    control-group {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 8px;
     }
-
 
 </style>

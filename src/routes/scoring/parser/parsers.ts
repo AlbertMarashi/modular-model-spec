@@ -38,6 +38,9 @@ export class SourceParser extends Parser {
 
 
     complete(lang: string, flags: TokenFlag = TokenFlag.none): true {
+        // consumption of an EOF token
+        if (this.consumed === 0) return true
+
         this.tokens.push({
             lang,
             flags,
@@ -151,3 +154,4 @@ export class OptionalConsumer extends Parser {
         return null
     }
 }
+

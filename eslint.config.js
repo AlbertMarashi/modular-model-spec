@@ -50,6 +50,7 @@ export default [
                 "switchCase": 1,
                 "indent": 4,
             }],
+            // "prefer-const": "warn",
             "svelte/prefer-style-directive": ["error"],
             "svelte/sort-attributes": ["error"],
             "svelte/shorthand-directive": ["error", {

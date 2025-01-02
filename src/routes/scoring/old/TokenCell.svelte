@@ -1,40 +1,37 @@
 <script
     lang="ts">
 import type { RecordId } from "$lib/pojo_surreal";
-import Cell from "./Cell.svelte"
-import type { Token } from "./parser/types"
-import { scoring_state } from "./scoring.svelte";
+import Cell from "../Cell.svelte"
+import type { RenderToken } from "../scoring.svelte";
 
 let { 
-    token,
+    render_token,
     branch,
-    dragging = $bindable(),
 }: {
-    token: Token
+    render_token: RenderToken
     branch: RecordId<"branch">
-    dragging: boolean
 } = $props()
 
-let text = $derived(scoring_state.chars.slice(token.start, token.start + token.len))
+let text = $derived(render_token.text)
 </script>
 
 <special-token
-    style:--length={token.len}
-    class:start={text === "<|end_turn|>" ||
+    style:--length={render_token.token.len}
+    class:start={
+        text === "<|end_turn|>" ||
         text === "<|role|>" ||
-        text === "<|end_message|>"}
-    >
+        text === "<|end_message|>"
+    }>
     <chars>
         {#each text as char}
             { char }
         {/each}
     </chars>
-    {#each { length: token.len }, i}
+    {#each { length: render_token.token.len }, i (i)}
         <Cell
-            token={token}
-            i={token.start + i}
+            render_token={render_token}
+            i={render_token.token.start + i}
             branch={branch}
-            bind:dragging={dragging}
         />
     {/each}
 </special-token>

@@ -37,7 +37,7 @@ function parse_line(parser: Parser, state: MarkdownState) {
     switch (ch) {
         case "#": return parse_heading(parser, state)
         case "`": return parse_code_fence(parser, state, true)
-        // case "-": return parse_list_item(parser, state)
+        case "-": return parse_list_item(parser, state)
     }
 
     // Not a heading line, parse inline content directly
@@ -233,7 +233,18 @@ function parse_sublanguage(parser: Parser, format: string, closing: string) {
 }
 
 function parse_list_item(parser: Parser, state: MarkdownState) {
+    parser.complete("markdown", state.flags)
 
+    expect_text(parser, "-")
+
+    state.flags |= TokenFlag.list
+    parser.next()
+
+    parser.complete("markdown", state.flags)
+
+    state.flags &= ~TokenFlag.list
+
+    parse_inline_content(parser, state)
 }
 
 function is_digit(ch: string): boolean {

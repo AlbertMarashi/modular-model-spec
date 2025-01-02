@@ -55,7 +55,7 @@ function consume_special_name(parser: Parser, name: string): string | null {
     const optional = parser.optional()
     const parsed_name = consume_special_token(optional)
     if (parsed_name !== name) {
-        parser.error("thread", `Expected <|${name}|>`, TokenFlag.special)
+        parser.error("thread", `Expected <|${name}|>`)
         if (parsed_name === "role") {
             parse_message(parser)
             return null

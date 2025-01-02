@@ -43,6 +43,8 @@ export enum TokenFlag {
     bracket = 1 << 24, // Brackets, e.g., {}, [], ()
 }
 
+export const TokenKeys = Object.keys(TokenFlag) as (keyof typeof TokenFlag)[]
+
 export abstract class Iter<T> {
     abstract peek_i(n: number): T | null
     abstract next(): T | null

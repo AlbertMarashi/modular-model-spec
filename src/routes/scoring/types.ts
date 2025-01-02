@@ -1,6 +1,4 @@
 import type { RecordId } from "$lib/pojo_surreal"
-import type { Token } from "./parser/types"
-
 
 export type TrainingThread = {
     user: RecordId<"user">

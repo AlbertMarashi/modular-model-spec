@@ -10,8 +10,8 @@ export const languages: Record<string, (parser: Parser) => void> = {
     "markdown": parse_markdown,
 }
 
-export function tokenize(source: string) {
+export function tokenize(source: string, language: string = "thread") {
     const parser = new SourceParser(source)
-    parse_thread(parser)
+    languages[language](parser)
     return parser.tokens
 }

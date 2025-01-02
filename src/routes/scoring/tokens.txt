@@ -1,7 +1,7 @@
 <|role|>developer<|content|><preamble>
 You are the SiteForge Brand Intelligence AI Copilot. You are a single component part of a larger AI-website builder application.
 
-Your goal is to complete the onboarding and brand memory management aspect of the product.
+	Your goal is to complete the onboarding and brand memory management aspect of the product.
 
 This information will be used to later generate highly tailored, personalised and highly relevant content and web page generations in other areas of the application.
 </preamble>
@@ -172,11 +172,18 @@ For example, does your product offer things like:
 
 For the next question, I will ask them whether they would like to add or adjust about these offerings, otherwise we can proceed to learn more about who their target audiences are.<|end_message|><|role|>model<|format|>memory:plaintext<|content|>SiteForge offers an AI-powered Sitemap Generator that creates optimized website sitemaps efficiently, streamlining the website structuring process for users. It also provides an AI Web Design Generator that crafts website page designs and generates customized content, blending AI-driven creativity with professional quality, alongside an AI brand memories system functioning as an intelligent memory storehouse to learn, retain and utilize brand-related data for consistent and cohesive branding across customer websites.<|end_message|><|role|>context<|content|>**Updated Memory**: {"id":{"tb":"memory","id":"0vvdtq2q2u49icduj7pg"},"subtype":"general","content":"SiteForge is an AI-powered website builder that simplifies creating and generating websites using an AI-first approach to website design and development. It features innovative tools such as an AI-powered Sitemap Generator, an AI Web Page Generator, and an intelligent AI Brand Memories feature for consistent and coherent brand management."}
 
-**Created Memory**: {"id":{"tb":"memory","id":"5g5x0tdvozz1gdx3ojpt"},"subtype":"offering","content":"SiteForge offers an AI-powered Sitemap Generator that creates optimized website sitemaps efficiently, streamlining the website structuring process for users."}
-
-**Created Memory**: {"id":{"tb":"memory","id":"dr82zzofulejds1hfqs1"},"subtype":"offering","content":"SiteForge provides an AI Web Design Generator that crafts unique website page designs with customized content, blending AI-driven creativity with professional quality."}
-
-**Created Memory**: {"id":{"tb":"memory","id":"ri8becexuddmww1ykg09"},"subtype":"offering","content":"SiteForge features an AI Brand Memories system, functioning as an intelligent memory storehouse to retain and utilize brand-related data for consistent and cohesive branding across their users websites."}<|end_message|><|role|>model<|format|>markdown<|content|>*Analyzing your business's core offerings with strategic insight*
+**Created Memory**:
+```json
+{"id":{"tb":"memory","id":"5g5x0tdvozz1gdx3ojpt"},"subtype":"offering","content":"SiteForge offers an AI-powered Sitemap Generator that creates optimized website sitemaps efficiently, streamlining the website structuring process for users."}
+```
+**Created Memory**:
+```json
+{"id":{"tb":"memory","id":"dr82zzofulejds1hfqs1"},"subtype":"offering","content":"SiteForge provides an AI Web Design Generator that crafts unique website page designs with customized content, blending AI-driven creativity with professional quality."}
+```
+**Created Memory**:
+```json
+{"id":{"tb":"memory","id":"ri8becexuddmww1ykg09"},"subtype":"offering","content":"SiteForge features an AI Brand Memories system, functioning as an intelligent memory storehouse to retain and utilize brand-related data for consistent and cohesive branding across their users websites."}<|end_message|><|role|>model<|format|>markdown<|content|>*Analyzing your business's core offerings with strategic insight*
+```
 
 Thank you for sharing all of that information with me. It will significantly help in tailoring **SiteForge**'s website to your customers.
 

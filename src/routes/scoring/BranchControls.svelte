@@ -3,19 +3,25 @@
 import Icon from "$lib/display/Icon.svelte"
 import Edit from "svelte-material-icons/Pencil.svelte"
 
+const {
+    onedit,
+}: {
+    onedit: () => void
+} = $props()
 </script>
 <branch-controls>
     <edit-area>
-        <icon-button>
+        <button
+            onclick={onedit}>
             <Icon
                 icon={Edit} />
-        </icon-button>
+        </button>
     </edit-area>
 </branch-controls>
 <style>
 
 
-icon-button {
+button {
     padding: 10px;
     font-size: 24px;
     cursor: pointer;

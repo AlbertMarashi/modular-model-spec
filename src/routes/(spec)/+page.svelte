@@ -35,7 +35,7 @@ spec {
     padding: 40px;
     overflow-y: auto;
     scrollbar-color: rgba(var(--foreground-rgb), 0.1) rgba(var(--foreground-rgb), 0.01);
-    /* flex: 1; */
+    flex: 1;
 }
 
 toc {
